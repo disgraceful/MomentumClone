@@ -5,9 +5,9 @@
       <div class="top-row">
         <div class="search">
           <div>
-            <i class="fas fa-search fa-lg"></i>
-            <span class="underline"></span>
+            <i ref="icon" class="fas fa-search fa-lg icon"></i>
             <input ref="search" type="text" />
+            <span class="underline"></span>
           </div>
         </div>
         <div class="weather-container">
@@ -45,13 +45,19 @@
 export default {
   data() {
     return {
-      input: null
+      input: null,
+      icon: null
     };
   },
   watch: {},
   mounted() {
     this.input = this.$refs.search;
+    this.icon = this.$refs.icon;
+
+    this.input.onfocus = () => (this.icon.style.opacity = 1);
+    this.input.onblur = () => (this.icon.style.opacity = 0.5);
     console.dir(this.input);
+    console.dir(this.icon);
   }
 };
 </script>
@@ -67,7 +73,6 @@ export default {
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
-  /* height: 100vh; */
   background-color: #464646;
   position: absolute;
   top: 0;
@@ -79,8 +84,6 @@ export default {
 
 #time {
   z-index: 5;
-  /* position: absolute; */
-
   font-size: 80px;
 }
 
@@ -128,6 +131,16 @@ export default {
   padding: 0 10px;
 }
 
+.search > div {
+  position: relative;
+  display: inline-block;
+}
+
+.search > div > i {
+  font-size: 25px;
+  opacity: 0.5;
+}
+
 .search input[type="text"] {
   background-color: transparent;
   color: inherit;
@@ -136,35 +149,33 @@ export default {
   pointer-events: auto;
   padding: 8px;
   position: relative;
-  /* border-bottom: 0px #fff solid; */
-}
-
-.search > div {
-  position: relative;
-  display: inline-block;
 }
 
 .underline {
-  width: 110%;
+  width: 100%;
   height: 2px;
   border-bottom: 2px #fff solid;
-  opacity: 1;
-  transition: all 0.5s;
   position: absolute;
   bottom: 0;
   left: 0;
-  margin-left: -25px;
+  opacity: 0;
+  transition: all 0.5s;
 }
 
 .search input[type="text"]:focus {
   outline: none;
 }
 
-.search input[type="text"]:focus .input-container::after {
+.search > div:hover .underline {
+  opacity: 0.5;
+}
+
+.search input[type="text"]:focus + .underline {
   opacity: 1;
 }
 
-.input-container:hover::after {
-  opacity: 0.6;
+.icon {
+  opacity: 0.5;
+  transition: all 0.5s;
 }
 </style>
