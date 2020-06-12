@@ -1,8 +1,8 @@
 <template>
   <div class="top-row">
-    <div class="search-container">
+    <div ref="container" class="search-container">
       <div>
-        <i ref="icon" class="fas fa-search fa-lg"></i>
+        <i class="fas fa-search fa-lg icon"></i>
         <input ref="search" class="searchbar" type="text" />
         <span class="underline"></span>
       </div>
@@ -22,16 +22,24 @@ export default {
   data() {
     return {
       input: null,
-      icon: null
+      container: null
     };
   },
   watch: {},
   mounted() {
     this.input = this.$refs.search;
-    this.icon = this.$refs.icon;
+    this.container = this.$refs.container;
 
-    this.input.onfocus = () => (this.icon.style.opacity = 1);
-    this.input.onblur = () => (this.icon.style.opacity = 0.5);
+    this.input.onfocus = () => {
+      if (!this.container.classList.contains("active")) {
+        this.container.classList.toggle("active");
+      }
+    };
+    this.input.onblur = () => {
+      if (!this.input.value) {
+        this.container.classList.toggle("active");
+      }
+    };
   }
 };
 </script>
@@ -66,7 +74,7 @@ export default {
   display: inline-block;
 }
 
-.search-container > div > i {
+.search-container > div > .icon {
   font-size: 24px;
   opacity: 0.5;
   transition: all 0.5s;
@@ -93,15 +101,16 @@ export default {
   transition: all 0.5s;
 }
 
+.search-container.active .underline,
+.search-container.active .icon {
+  opacity: 1;
+}
+
 .search-container .searchbar:focus {
   outline: none;
 }
 
-.search-container > div:hover .underline {
+.search-container:not(.active) > div:hover .underline {
   opacity: 0.5;
-}
-
-.search-container .searchbar:focus + .underline {
-  opacity: 1;
 }
 </style>
