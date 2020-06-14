@@ -29,7 +29,6 @@ export default {
   },
   methods: {},
   mounted() {
-    console.log(this);
     this.input = this.$refs.search;
     this.container = this.$refs.container;
     this.input.onfocus = () => {

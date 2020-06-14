@@ -4,7 +4,6 @@
     <div class="container">
       <mc-header></mc-header>
       <div class="gap"></div>
-
       <mc-center></mc-center>
       <mc-lower></mc-lower>
       <mc-footer></mc-footer>
