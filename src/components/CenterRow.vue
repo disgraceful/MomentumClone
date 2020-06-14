@@ -39,6 +39,7 @@ export default {
   font-weight: 500;
   letter-spacing: -5px;
   margin-right: 20px;
+  margin-left: 80px;
 }
 
 .center-row .quote {
