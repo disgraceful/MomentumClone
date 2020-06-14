@@ -53,9 +53,6 @@ export default {
   align-items: center;
 }
 
-.time-select {
-  align-content: stretch;
-}
 .time-select > div {
   font-size: 28px;
   margin: 10px;
