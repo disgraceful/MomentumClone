@@ -47,6 +47,7 @@ export default {
 <style scoped>
 .top-row {
   display: flex;
+  flex: 0 1 auto;
 }
 
 .top-row > div {
@@ -58,6 +59,9 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: end;
+}
+
+.top-row .weather-container * {
   font-size: 28px;
 }
 
@@ -72,10 +76,11 @@ export default {
 .search-container > div {
   position: relative;
   display: inline-block;
+  font-size: 20px;
 }
 
 .search-container > div > .icon {
-  font-size: 24px;
+  font-size: inherit;
   opacity: 0.5;
   transition: all 0.5s;
 }
