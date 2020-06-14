@@ -1,13 +1,15 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <mc-main></mc-main>
+  </div>
 </template>
 
 <script>
+import MainView from "./components/MainView";
 export default {
   name: "App",
-  components: {}
+  components: {
+    "mc-main": MainView
+  }
 };
 </script>
-
-<style>
-</style>
