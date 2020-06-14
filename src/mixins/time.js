@@ -6,13 +6,24 @@ export default {
     };
   },
   computed: {
-    formattedTime() {
+    time24() {
       return `${this.format(this.hours)}:${this.format(this.minutes)}`;
+    },
+    time12() {
+      let timePart = "AM";
+      if (this.hours > 12) {
+        timePart = "PM";
+        this.hours -= 12;
+      }
+      return `${this.format(this.hours)}:${this.format(
+        this.minutes
+      )} ${timePart}`;
     },
   },
   methods: {
     getCurTime() {
       const date = new Date();
+
       this.hours = date.getHours();
       this.minutes = date.getMinutes();
     },

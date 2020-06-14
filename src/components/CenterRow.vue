@@ -1,14 +1,12 @@
 <template>
   <div class="center-row">
     <div class="time-wrapper">
-      <!-- <div> -->
-      <div class="time">{{ formattedTime }}</div>
+      <div class="time">{{ selectedFormat === 12 ? time12 : time24 }}</div>
       <div class="time-select">
-        <div>12</div>
-        <div>24</div>
+        <div @click="selectedFormat = 12">12</div>
+        <div @click="selectedFormat = 24">24</div>
       </div>
     </div>
-    <!-- </div> -->
     <div class="quote">Very profound quote</div>
   </div>
 </template>
@@ -16,7 +14,12 @@
 <script>
 import time from "../mixins/time";
 export default {
-  mixins: [time]
+  mixins: [time],
+  data() {
+    return {
+      selectedFormat: 24
+    };
+  }
 };
 </script>
 
