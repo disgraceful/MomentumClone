@@ -9,12 +9,6 @@
         </mc-input>
       </div>
     </div>
-    <!-- <div ref="container" class="search-container">
-      <div>
-        <input ref="search" class="searchbar" type="text" />
-        <span class="underline"></span>
-      </div>
-    </div>-->
     <div class="weather-container">
       <div>
         <i class="fas fa-sun fa-lg"></i>
@@ -36,20 +30,7 @@ export default {
     };
   },
   watch: {},
-  mounted() {
-    // this.input = this.$refs.search;
-    // this.container = this.$refs.container;
-    // this.input.onfocus = () => {
-    //   if (!this.container.classList.contains("active")) {
-    //     this.container.classList.toggle("active");
-    //   }
-    // };
-    // this.input.onblur = () => {
-    //   if (!this.input.value) {
-    //     this.container.classList.toggle("active");
-    //   }
-    // };
-  }
+  mounted() {}
 };
 </script>
 
@@ -86,51 +67,5 @@ export default {
   position: relative;
   display: inline-block;
   font-size: 20px !important;
-}
-
-.search-container > div {
-  position: relative;
-  display: inline-block;
-  font-size: 20px;
-}
-
-.search-container > div > .icon {
-  font-size: inherit;
-  opacity: 0.5;
-  transition: all 0.5s;
-}
-
-.search-container .searchbar {
-  background-color: transparent;
-  color: inherit;
-  border: none;
-  font-size: 20px;
-  pointer-events: auto;
-  padding: 8px;
-  position: relative;
-}
-
-.underline {
-  width: 100%;
-  height: 2px;
-  border-bottom: 2px #fff solid;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  opacity: 0;
-  transition: all 0.5s;
-}
-
-.search-container.active .underline,
-.search-container.active .icon {
-  opacity: 1;
-}
-
-.search-container .searchbar:focus {
-  outline: none;
-}
-
-.search-container:not(.active) > div:hover .underline {
-  opacity: 0.5;
 }
 </style>
