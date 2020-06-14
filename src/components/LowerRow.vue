@@ -2,14 +2,15 @@
   <div class="lower-row">
     <div class="question">What is your focus for today?</div>
     <div>
-      <input type="text" />
+      <mc-input text-align="center"></mc-input>
     </div>
     <div class="focus"></div>
   </div>
 </template>
 
 <script>
-export default {};
+import Input from "./shared/Input";
+export default { components: { "mc-input": Input } };
 </script>
 
 <style>
@@ -22,6 +23,6 @@ export default {};
 }
 
 .lower-row > div {
-  font-size: 28px;
+  font-size: 36px;
 }
 </style>

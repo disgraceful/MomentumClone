@@ -1,12 +1,20 @@
 <template>
   <div class="top-row">
-    <div ref="container" class="search-container">
+    <div>
+      <div class="search-wrapper">
+        <mc-input hover>
+          <template v-slot:icon>
+            <i class="fas fa-search fa-lg icon"></i>
+          </template>
+        </mc-input>
+      </div>
+    </div>
+    <!-- <div ref="container" class="search-container">
       <div>
-        <i class="fas fa-search fa-lg icon"></i>
         <input ref="search" class="searchbar" type="text" />
         <span class="underline"></span>
       </div>
-    </div>
+    </div>-->
     <div class="weather-container">
       <div>
         <i class="fas fa-sun fa-lg"></i>
@@ -18,7 +26,9 @@
 </template>
 
 <script>
+import Input from "./shared/Input";
 export default {
+  components: { "mc-input": Input },
   data() {
     return {
       input: null,
@@ -27,19 +37,18 @@ export default {
   },
   watch: {},
   mounted() {
-    this.input = this.$refs.search;
-    this.container = this.$refs.container;
-
-    this.input.onfocus = () => {
-      if (!this.container.classList.contains("active")) {
-        this.container.classList.toggle("active");
-      }
-    };
-    this.input.onblur = () => {
-      if (!this.input.value) {
-        this.container.classList.toggle("active");
-      }
-    };
+    // this.input = this.$refs.search;
+    // this.container = this.$refs.container;
+    // this.input.onfocus = () => {
+    //   if (!this.container.classList.contains("active")) {
+    //     this.container.classList.toggle("active");
+    //   }
+    // };
+    // this.input.onblur = () => {
+    //   if (!this.input.value) {
+    //     this.container.classList.toggle("active");
+    //   }
+    // };
   }
 };
 </script>
@@ -71,6 +80,12 @@ export default {
 
 .weather-container i {
   padding: 0 10px;
+}
+
+.top-row > div > .search-wrapper {
+  position: relative;
+  display: inline-block;
+  font-size: 20px !important;
 }
 
 .search-container > div {
