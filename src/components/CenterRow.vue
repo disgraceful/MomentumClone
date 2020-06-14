@@ -10,16 +10,6 @@ export default {};
 </script>
 
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.gap {
-  display: flex;
-  flex: 1 1 50%;
-}
-
 .center-row {
   display: flex;
   flex-direction: column;
@@ -27,6 +17,7 @@ export default {};
   text-align: center;
   justify-content: center;
   align-content: center;
+  user-select: none;
 }
 
 .center-row .time {
