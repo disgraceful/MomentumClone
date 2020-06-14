@@ -1,12 +1,15 @@
 <template>
   <div class="center-row">
-    <div class="time">12:52</div>
+    <div class="time">{{ formattedTime }}</div>
     <div class="quote">Very profound quote</div>
   </div>
 </template>
 
 <script>
-export default {};
+import time from "../mixins/time";
+export default {
+  mixins: [time]
+};
 </script>
 
 <style scoped>
