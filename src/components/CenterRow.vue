@@ -27,7 +27,7 @@ export default {
       this.retrieveFormat();
     },
     retrieveFormat() {
-      this.selectedFormat = this.retrieve("format");
+      this.selectedFormat = this.retrieve("format") | 24;
     }
   },
   mounted() {
