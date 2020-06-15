@@ -1,9 +1,9 @@
 <template>
   <div class="quote-wrapper">
-    <div class="quote" v-show="nameKnown">
-      Very profound quote,
-      <span>{{ name }}</span>
-      <div class="remove-btn" @click="clearName()"></div>
+    <div ref="quote" class="quote" v-show="nameKnown">
+      {{ totalMesg }}
+      <span v-if="isNameDisplayed">{{ name }}</span>
+      <div v-if="isNameDisplayed" class="remove-btn" @click="clearName()"></div>
     </div>
     <div class="name" v-show="!nameKnown">
       <mc-input
@@ -25,7 +25,12 @@ export default {
   data() {
     return {
       name: null,
-      nameKnown: false
+      nameKnown: false,
+      displayChance: 0,
+      greeting: "Good morning",
+      quoteText: "Very profound quote",
+      totalMesg: "",
+      isNameDisplayed: false
     };
   },
   computed: {},
@@ -38,8 +43,23 @@ export default {
     },
     clearName() {
       this.name = null;
-      this.delete("name");
       this.nameKnown = false;
+      this.delete("name");
+    },
+    getDisplayMessage() {
+      switch (true) {
+        case this.displayChance < 33:
+          this.totalMesg = this.quoteText;
+          this.isNameDisplayed = false;
+          return;
+        case this.displayChance < 66:
+          this.totalMesg = this.quoteText + ",";
+          this.isNameDisplayed = true;
+          return;
+        case this.displayChance >= 66:
+          this.totalMesg = this.greeting + ",";
+          this.isNameDisplayed = true;
+      }
     }
   },
   created() {
@@ -48,6 +68,10 @@ export default {
       this.name = result.substring(1, result.length - 1);
       this.nameKnown = !!this.name;
     }
+    this.displayChance = Math.floor(Math.random() * 100);
+  },
+  mounted() {
+    this.getDisplayMessage();
   }
 };
 </script>
