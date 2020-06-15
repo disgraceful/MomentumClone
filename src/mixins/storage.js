@@ -3,8 +3,14 @@ export default {
     save(key, payload) {
       localStorage.setItem(key, JSON.stringify(payload));
     },
-    retrieve(key) {
-      return JSON.parse(localStorage.getItem(key));
+    retrieve(key, parse) {
+      const result = localStorage.getItem(key);
+      if (result && parse) {
+        return JSON.parse(result);
+      } else if (!result) {
+        return null;
+      }
+      return result;
     },
   },
 };
