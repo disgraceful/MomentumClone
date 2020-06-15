@@ -3,8 +3,8 @@
     <div class="time-wrapper">
       <div class="time">{{ selectedFormat === 12 ? time12 : time24 }}</div>
       <div class="time-select">
-        <div @click="selectedFormat = 12">12</div>
-        <div @click="selectedFormat = 24">24</div>
+        <div @click="saveFormat(12)">12</div>
+        <div @click="saveFormat(24)">24</div>
       </div>
     </div>
     <div class="quote">Very profound quote</div>
@@ -13,12 +13,25 @@
 
 <script>
 import time from "../mixins/time";
+import storage from "../mixins/storage";
 export default {
-  mixins: [time],
+  mixins: [time, storage],
   data() {
     return {
-      selectedFormat: 24
+      selectedFormat: null
     };
+  },
+  methods: {
+    saveFormat(format) {
+      this.save("format", format);
+      this.retrieveFormat();
+    },
+    retrieveFormat() {
+      this.selectedFormat = this.retrieve("format") | 24;
+    }
+  },
+  mounted() {
+    this.retrieveFormat();
   }
 };
 </script>
