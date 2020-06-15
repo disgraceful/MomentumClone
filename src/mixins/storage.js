@@ -12,5 +12,8 @@ export default {
       }
       return result;
     },
+    delete(key) {
+      localStorage.removeItem(key);
+    },
   },
 };

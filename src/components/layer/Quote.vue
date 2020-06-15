@@ -1,11 +1,11 @@
 <template>
   <div class="quote-wrapper">
-    <div class="quote" v-if="nameKnown">
+    <div class="quote" v-show="nameKnown">
       Very profound quote,
       <span>{{ name }}</span>
-      <div class="remove-btn"></div>
+      <div class="remove-btn" @click="clearName()"></div>
     </div>
-    <div class="name" v-else>
+    <div class="name" v-show="!nameKnown">
       <mc-input
         text-align="center"
         placeholder="What's your name?"
@@ -35,6 +35,11 @@ export default {
         this.save("name", this.name);
         this.nameKnown = true;
       }
+    },
+    clearName() {
+      this.name = null;
+      this.delete("name");
+      this.nameKnown = false;
     }
   },
   created() {
@@ -62,10 +67,14 @@ export default {
 
 .remove-btn {
   display: inline-block;
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   position: absolute;
   margin-left: 10px;
+  padding: 10px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.5s;
 }
 
 .remove-btn::after,
@@ -76,10 +85,8 @@ export default {
   position: absolute;
   transform: rotate(45deg);
   background-color: #fff;
-  top: 7px;
-  right: 0;
-  left: 0;
-  bottom: 0;
+  top: 13px;
+  right: 6px;
   opacity: 0;
   transition: all 0.5s;
 }
@@ -88,7 +95,14 @@ export default {
 .quote > span:hover ~ .remove-btn::before,
 .remove-btn:hover::after,
 .remove-btn:hover::before {
+  opacity: 0.8;
+}
+
+.quote > span:hover ~ .remove-btn,
+.remove-btn:hover {
+  background-color: rgba(224, 224, 224, 0.5);
   opacity: 1;
+  cursor: pointer;
 }
 
 .remove-btn::after {
