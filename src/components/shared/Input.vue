@@ -1,7 +1,15 @@
 <template>
   <div ref="container" class="input-container" :style="cssProps">
     <slot name="icon"></slot>
-    <input ref="search" class="inputbar" type="text" />
+    <input
+      ref="search"
+      class="inputbar"
+      type="text"
+      :value="value"
+      :placeholder="placeholder"
+      @input="$emit('input', $event.target.value)"
+      @keydown.enter="$emit('enter', $event.target.value)"
+    />
     <span class="underline"></span>
   </div>
 </template>
@@ -13,7 +21,9 @@ export default {
       type: String,
       default: "left"
     },
-    hover: Boolean
+    hover: Boolean,
+    value: String,
+    placeholder: String
   },
   data() {
     return {};
@@ -67,6 +77,9 @@ export default {
   position: relative;
   text-align: var(--text-align);
   max-width: 100%;
+}
+.inputbar::placeholder {
+  color: inherit;
 }
 
 .input-container .inputbar:focus {

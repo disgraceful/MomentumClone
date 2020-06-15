@@ -7,15 +7,19 @@
         <div @click="saveFormat(24)">24</div>
       </div>
     </div>
-    <div class="quote">Very profound quote</div>
+    <mc-quote-wrapper></mc-quote-wrapper>
   </div>
 </template>
 
 <script>
 import time from "../mixins/time";
 import storage from "../mixins/storage";
+import Quote from "./layer/Quote";
 export default {
   mixins: [time, storage],
+  components: {
+    "mc-quote-wrapper": Quote
+  },
   data() {
     return {
       selectedFormat: null
@@ -53,10 +57,6 @@ export default {
   letter-spacing: -5px;
   margin-right: 20px;
   margin-left: 80px;
-}
-
-.center-row .quote {
-  font-size: 400%;
 }
 
 .time-wrapper {
