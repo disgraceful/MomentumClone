@@ -47,23 +47,14 @@ export default {
     getGreeting() {
       const daypart = this.getDayPart();
       this.greeting = `Good ${daypart},`;
-    },
-    async getRandomShortQuote() {
-      const quotes = await this.get("http://localhost:8080/api/quotes");
-      const quouteArray = quotes.body;
-      const index = Math.floor(Math.random() * quouteArray.length);
-      const greeting = quouteArray[index];
-      this.quoteText = greeting.text;
     }
   },
-  async created() {
+  created() {
     const result = this.retrieve("name");
     if (result) {
       this.name = result.substring(1, result.length - 1);
       this.nameKnown = !!this.name;
     }
-    this.displayChance = Math.floor(Math.random() * 100);
-    await this.getRandomShortQuote();
     this.getGreeting();
   }
 };

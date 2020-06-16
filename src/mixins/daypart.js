@@ -2,7 +2,6 @@ export default {
   methods: {
     getDayPart() {
       const hours = new Date().getHours();
-      console.log(hours);
       switch (true) {
         case hours >= 5 && hours < 12:
           return "morning";

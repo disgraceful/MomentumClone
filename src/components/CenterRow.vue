@@ -7,18 +7,18 @@
         <div @click="saveFormat(24)">24</div>
       </div>
     </div>
-    <mc-quote-wrapper></mc-quote-wrapper>
+    <mc-greeting-wrapper></mc-greeting-wrapper>
   </div>
 </template>
 
 <script>
 import time from "../mixins/time";
 import storage from "../mixins/storage";
-import Quote from "./layer/Quote";
+import Greeting from "./layer/Greeting";
 export default {
   mixins: [time, storage],
   components: {
-    "mc-quote-wrapper": Quote
+    "mc-greeting-wrapper": Greeting
   },
   data() {
     return {
