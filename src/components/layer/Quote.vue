@@ -1,9 +1,9 @@
 <template>
-  <div class="quote-wrapper">
-    <div ref="quote" class="quote" v-show="nameKnown">
-      {{ totalMesg }}
-      <span v-if="isNameDisplayed">{{ name }}</span>
-      <div v-if="isNameDisplayed" class="remove-btn" @click="clearName()"></div>
+  <div class="greeting-wrapper">
+    <div ref="greeting" class="greeting" v-show="nameKnown">
+      {{ greeting }}
+      <span>{{ name }}</span>
+      <div class="remove-btn" @click="clearName()"></div>
     </div>
     <div class="name" v-show="!nameKnown">
       <mc-input
@@ -20,18 +20,15 @@
 import Input from "../shared/Input";
 import storage from "../../mixins/storage";
 import apiservice from "../../mixins/apiservice";
+import daypart from "../../mixins/daypart";
 export default {
   components: { "mc-input": Input },
-  mixins: [storage, apiservice],
+  mixins: [storage, apiservice, daypart],
   data() {
     return {
       name: null,
       nameKnown: false,
-      displayChance: 0,
-      greeting: "Good morning",
-      quoteText: "Very profound quote",
-      totalMesg: "",
-      isNameDisplayed: false
+      greeting: ""
     };
   },
   computed: {},
@@ -47,24 +44,16 @@ export default {
       this.nameKnown = false;
       this.delete("name");
     },
-    getDisplayMessage() {
-      switch (true) {
-        case this.displayChance < 33:
-          this.totalMesg = this.quoteText;
-          this.isNameDisplayed = false;
-          return;
-        case this.displayChance < 66:
-          this.totalMesg = this.quoteText + ",";
-          this.isNameDisplayed = true;
-          return;
-        case this.displayChance >= 66:
-          this.totalMesg = this.greeting + ",";
-          this.isNameDisplayed = true;
-      }
+    getGreeting() {
+      const daypart = this.getDayPart();
+      this.greeting = `Good ${daypart},`;
     },
     async getRandomShortQuote() {
       const quotes = await this.get("http://localhost:8080/api/quotes");
-      console.log(quotes);
+      const quouteArray = quotes.body;
+      const index = Math.floor(Math.random() * quouteArray.length);
+      const greeting = quouteArray[index];
+      this.quoteText = greeting.text;
     }
   },
   async created() {
@@ -75,15 +64,13 @@ export default {
     }
     this.displayChance = Math.floor(Math.random() * 100);
     await this.getRandomShortQuote();
-  },
-  mounted() {
-    this.getDisplayMessage();
+    this.getGreeting();
   }
 };
 </script>
 
 <style>
-.quote-wrapper {
+.greeting-wrapper {
   display: flex;
   flex-direction: row;
   font-size: 400%;
@@ -91,7 +78,7 @@ export default {
   position: relative;
 }
 
-.quote-wrapper * {
+.greeting-wrapper * {
   font-size: inherit;
 }
 
@@ -121,14 +108,14 @@ export default {
   transition: all 0.5s;
 }
 
-.quote > span:hover ~ .remove-btn::after,
-.quote > span:hover ~ .remove-btn::before,
+.greeting > span:hover ~ .remove-btn::after,
+.greeting > span:hover ~ .remove-btn::before,
 .remove-btn:hover::after,
 .remove-btn:hover::before {
   opacity: 0.8;
 }
 
-.quote > span:hover ~ .remove-btn,
+.greeting > span:hover ~ .remove-btn,
 .remove-btn:hover {
   background-color: rgba(224, 224, 224, 0.5);
   opacity: 1;
