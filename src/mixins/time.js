@@ -23,7 +23,6 @@ export default {
   methods: {
     getCurTime() {
       const date = new Date();
-
       this.hours = date.getHours();
       this.minutes = date.getMinutes();
     },
