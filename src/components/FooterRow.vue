@@ -33,7 +33,6 @@ export default {
       const quoteSave = this.retrieve("quote", true);
       console.log(quoteSave);
       if (quoteSave) {
-        this.quote = {};
         const timeDiff = Math.abs(new Date().getTime() - quoteSave.date);
         const hourDiff = timeDiff / (60 * 60 * 1000);
         console.log(hourDiff);
@@ -48,14 +47,13 @@ export default {
     },
 
     async requestQuote() {
-      this.quote = {};
       try {
         const result = await this.get("http://localhost:8080/api/quotes");
         const dailyQuote = this.selectRandomQuote(result.body);
+        this.quote = {};
         this.quote.text = dailyQuote.text;
         this.quote.author = dailyQuote.author ? dailyQuote.author : "Unknown";
         this.saveQuote(this.quote);
-        console.log(this.quote);
       } catch (error) {
         this.quote.text =
           "Sometimes it's hard to fall, but even harder to fallback";
