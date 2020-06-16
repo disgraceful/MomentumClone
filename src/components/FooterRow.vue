@@ -1,7 +1,10 @@
 <template>
   <div class="footer-row">
     <div class="img-info">Beautiful nature picture</div>
-    <div v-show="quote" class="secondary-quote">{{ quote.text }}</div>
+    <div v-if="quote" class="quote">
+      <div class="quote-text">{{ quote.text }}</div>
+      <div class="quote-author">{{ quote.author }}</div>
+    </div>
     <div class="todo">
       <span>Todo</span>
       <div class="todo-body"></div>
@@ -16,7 +19,8 @@ export default {
   mixins: [apiservice, storage],
   data() {
     return {
-      quote: null
+      quote: null,
+      showAuthor: false
     };
   },
   methods: {
@@ -34,6 +38,11 @@ export default {
 
     selectRandomQuote(quoteArray) {
       return quoteArray[Math.floor(Math.random() * quoteArray.length)];
+    },
+
+    show() {
+      console.log("Showing");
+      this.showAuthor = !this.showAuthor;
     }
   },
   async created() {
@@ -48,19 +57,45 @@ export default {
   flex: 0 1 auto;
   padding: 10px 15px;
 }
-.secondary-quote {
-  font-size: 22px;
-  text-align: center;
+.quote {
+  flex-direction: column;
   flex: 1 1 auto;
   justify-content: center;
+  text-align: center;
+  font-size: 22px;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.quote-author {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.quote:hover .quote-author {
+  opacity: 0.8;
+}
+
+.quote:hover .quote-text {
+  transform: translateY(-28px);
+}
+
+.quote > div {
+  font-size: inherit;
+  transition: all 0.5s ease;
 }
 
 .footer-row > div {
   display: flex;
 }
+
 .img-info,
 .todo {
   flex: 0 0 200px;
+  align-self: flex-end;
 }
 
 .todo {
