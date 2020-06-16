@@ -1,9 +1,9 @@
 <template>
   <div class="footer-row">
     <div class="img-info">Beautiful nature picture</div>
-    <div v-if="quote" class="quote">
-      <div class="quote-text">{{ quote.text }}</div>
-      <div class="quote-author">{{ quote.author }}</div>
+    <div class="quote">
+      <div v-if="!loading" class="quote-text">{{ quote.text }}</div>
+      <div v-if="!loading" class="quote-author">{{ quote.author }}</div>
     </div>
     <div class="todo">
       <span>Todo</span>
@@ -19,19 +19,47 @@ export default {
   mixins: [apiservice, storage],
   data() {
     return {
-      quote: null,
-      showAuthor: false
+      loading: true,
+      quote: null
     };
+  },
+  computed: {
+    isQuote() {
+      return this.quote.text !== null;
+    }
   },
   methods: {
     async getDailyQuote() {
+      const quoteSave = this.retrieve("quote", true);
+      console.log(quoteSave);
+      if (quoteSave) {
+        this.quote = {};
+        const timeDiff = Math.abs(new Date().getTime() - quoteSave.date);
+        const hourDiff = timeDiff / (60 * 60 * 1000);
+        console.log(hourDiff);
+        if (hourDiff < 24) {
+          this.quote = {};
+          this.quote.text = quoteSave.text;
+          this.quote.author = quoteSave.author;
+        }
+        return;
+      }
+      await this.requestQuote();
+    },
+
+    async requestQuote() {
+      this.quote = {};
       try {
         const result = await this.get("http://localhost:8080/api/quotes");
         const dailyQuote = this.selectRandomQuote(result.body);
-        this.quote = {};
         this.quote.text = dailyQuote.text;
-        this.quote.author = dailyQuote.author;
+        this.quote.author = dailyQuote.author ? dailyQuote.author : "Unknown";
+        this.saveQuote(this.quote);
+        console.log(this.quote);
       } catch (error) {
+        this.quote.text =
+          "Sometimes it's hard to fall, but even harder to fallback";
+        this.quote.author = "Unknown";
         console.log(error);
       }
     },
@@ -40,13 +68,18 @@ export default {
       return quoteArray[Math.floor(Math.random() * quoteArray.length)];
     },
 
-    show() {
-      console.log("Showing");
-      this.showAuthor = !this.showAuthor;
+    saveQuote(quote) {
+      this.save("quote", {
+        text: quote.text,
+        author: quote.author,
+        date: new Date().getTime()
+      });
     }
   },
-  async created() {
+  async mounted() {
+    this.loading = true;
     await this.getDailyQuote();
+    this.loading = false;
   }
 };
 </script>
