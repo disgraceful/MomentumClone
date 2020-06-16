@@ -19,9 +19,10 @@
 <script>
 import Input from "../shared/Input";
 import storage from "../../mixins/storage";
+import apiservice from "../../mixins/apiservice";
 export default {
   components: { "mc-input": Input },
-  mixins: [storage],
+  mixins: [storage, apiservice],
   data() {
     return {
       name: null,
@@ -60,15 +61,20 @@ export default {
           this.totalMesg = this.greeting + ",";
           this.isNameDisplayed = true;
       }
+    },
+    async getRandomShortQuote() {
+      const quotes = await this.get("http://localhost:8080/api/quotes");
+      console.log(quotes);
     }
   },
-  created() {
+  async created() {
     const result = this.retrieve("name");
     if (result) {
       this.name = result.substring(1, result.length - 1);
       this.nameKnown = !!this.name;
     }
     this.displayChance = Math.floor(Math.random() * 100);
+    await this.getRandomShortQuote();
   },
   mounted() {
     this.getDisplayMessage();
