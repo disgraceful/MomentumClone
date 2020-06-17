@@ -10,36 +10,67 @@
       </div>
     </div>
     <div class="weather-container">
-      <div>
+      <div v-if="userRegion">
         <i class="fas fa-sun fa-lg"></i>
         <span>31&#176;</span>
       </div>
-      <div class="location">Location</div>
+      <div class="location">{{ userRegion }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import Input from "./shared/Input";
+import apiservice from "../mixins/apiservice";
+import storage from "../mixins/storage";
 export default {
+  mixins: [apiservice, storage],
   components: { "mc-input": Input },
   data() {
     return {
       input: null,
-      container: null
+      container: null,
+      userRegion: ""
     };
   },
   watch: {},
   methods: {
     getLocation() {
       navigator.geolocation.getCurrentPosition(result => {
-        console.log(result);
+        const { latitude: lat, longitude: long } = result.coords;
+        console.log(lat, long);
+        if (!this.compareCoords({ lat, long })) {
+          this.getCity({ lat, long });
+        }
+        console.log(this.userRegion);
       });
+    },
+
+    getCity({ lat, long }) {
+      const url = `http://api.positionstack.com/v1/reverse?access_key=${process.env.VUE_APP_LOCATION_KEY}&query=${lat},${long}`;
+      this.get(url).then(response => {
+        console.log(response);
+        const region = response.body.data[0].region;
+        const country = response.body.data[0].country;
+        this.userRegion = `${region}, ${country}`;
+        this.save("location", { lat, long, region: this.userRegion });
+      });
+    },
+
+    compareCoords({ lat, long }) {
+      const location = this.retrieve("location", true);
+      if (!location) return false;
+      this.userRegion = location.region;
+      const { lat: oldLat, long: oldLong } = location;
+
+      return (
+        oldLat.toFixed(5) === lat.toFixed(5) &&
+        oldLong.toFixed(5) === long.toFixed(5)
+      );
     }
   },
   mounted() {
     this.getLocation();
-    console.log("key ", process.env.VUE_APP_LOCATION_KEY);
   }
 };
 </script>
