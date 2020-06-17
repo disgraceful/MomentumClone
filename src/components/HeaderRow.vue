@@ -30,7 +30,17 @@ export default {
     };
   },
   watch: {},
-  mounted() {}
+  methods: {
+    getLocation() {
+      navigator.geolocation.getCurrentPosition(result => {
+        console.log(result);
+      });
+    }
+  },
+  mounted() {
+    this.getLocation();
+    console.log("key ", process.env.VUE_APP_LOCATION_KEY);
+  }
 };
 </script>
 
