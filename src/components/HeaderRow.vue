@@ -12,7 +12,7 @@
     <div class="weather-container">
       <div v-if="!loading">
         <i class="fas fa-sun fa-lg"></i>
-        <span>31&#176;</span>
+        <span>{{ weatherDisplay }}&#176;</span>
       </div>
       <div v-if="!loading" class="location">{{ fullRegion }}</div>
     </div>
@@ -38,6 +38,12 @@ export default {
   computed: {
     fullRegion() {
       return `${this.userRegion}, ${this.userCountry}`;
+    },
+    weatherDisplay() {
+      if (this.weather) {
+        return this.weather.toFixed(0);
+      }
+      return "";
     }
   },
   methods: {
@@ -92,7 +98,6 @@ export default {
     async getWeather() {
       const key = "a34211b02a664017b85de5ad919937f5";
       const { lat, long } = this.getSavedCoords();
-      console.log(lat, long);
       const response = await this.get(
         `https://api.weatherbit.io/v2.0/forecast/hourly?lat=${lat}&lon=${long}&key=${key}`
       );
@@ -101,15 +106,20 @@ export default {
       const weather = response.body.data[0];
       this.weather = weather.temp;
       this.icon = weather.weather;
-      this.save("weather", { weather: this.weather, icon: this.icon });
+      this.save("weather", {
+        weather: this.weather,
+        icon: this.icon,
+        time: new Date().getTime()
+      });
     },
 
     async retrieveWeather() {
       const weather = this.retrieve("weather", true);
       if (weather) {
-        const timeDiff = new Date().getTime() - weather.time;
-        if (timeDiff / (60 * 60 * 1000) < 1) {
-          this.weather = weather.temp;
+        const timeDiff = new Date().getTime() - Number.parseInt(weather.time);
+        const hourDiff = Number.parseInt(timeDiff) / (60 * 60 * 1000);
+        if (hourDiff < 1) {
+          this.weather = weather.weather;
           this.icon = weather.icon;
         }
         return;
@@ -121,7 +131,7 @@ export default {
     this.loading = true;
     await this.getLocation();
     this.userRegion;
-    await this.getWeather();
+    await this.retrieveWeather();
     this.loading = false;
   }
 };

@@ -10,3 +10,10 @@ body {
   text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
   overflow-y: hidden;
 }
+
+@font-face {
+  font-family: "MeteoconsRegular";
+  src: url("./fonts/meteocons-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
