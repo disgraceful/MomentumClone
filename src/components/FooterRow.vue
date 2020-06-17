@@ -31,11 +31,9 @@ export default {
   methods: {
     async getDailyQuote() {
       const quoteSave = this.retrieve("quote", true);
-      console.log(quoteSave);
       if (quoteSave) {
         const timeDiff = Math.abs(new Date().getTime() - quoteSave.date);
         const hourDiff = timeDiff / (60 * 60 * 1000);
-        console.log(hourDiff);
         if (hourDiff < 24) {
           this.quote = {};
           this.quote.text = quoteSave.text;
