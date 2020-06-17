@@ -10,6 +10,7 @@ export default {
       } else if (!result) {
         return null;
       }
+      console.log(result);
       return result;
     },
     delete(key) {
