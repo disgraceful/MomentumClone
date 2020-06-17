@@ -31,7 +31,8 @@ export default {
       this.retrieveFormat();
     },
     retrieveFormat() {
-      this.selectedFormat = this.retrieve("format") | 24;
+      const result = Number.parseInt(this.retrieve("format"));
+      this.selectedFormat = result ? result : 24;
     }
   },
   mounted() {
