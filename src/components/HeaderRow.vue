@@ -10,11 +10,11 @@
       </div>
     </div>
     <div class="weather-container">
-      <div v-if="userRegion">
+      <div v-if="!loading">
         <i class="fas fa-sun fa-lg"></i>
         <span>31&#176;</span>
       </div>
-      <div class="location">{{ userRegion }}</div>
+      <div v-if="!loading" class="location">{{ fullRegion }}</div>
     </div>
   </div>
 </template>
@@ -28,49 +28,101 @@ export default {
   components: { "mc-input": Input },
   data() {
     return {
-      input: null,
-      container: null,
-      userRegion: ""
+      userRegion: "",
+      userCountry: "",
+      weather: null,
+      icon: null,
+      loading: false
     };
   },
-  watch: {},
+  computed: {
+    fullRegion() {
+      return `${this.userRegion}, ${this.userCountry}`;
+    }
+  },
   methods: {
-    getLocation() {
-      navigator.geolocation.getCurrentPosition(result => {
-        const { latitude: lat, longitude: long } = result.coords;
-        console.log(lat, long);
-        if (!this.compareCoords({ lat, long })) {
-          this.getCity({ lat, long });
-        }
-        console.log(this.userRegion);
+    getUserCoords() {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
       });
     },
 
-    getCity({ lat, long }) {
+    async getLocation() {
+      try {
+        const result = await this.getUserCoords();
+        const { latitude: lat, longitude: long } = result.coords;
+        if (!this.compareCoords({ lat, long })) {
+          await this.getCity({ lat, long });
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Please enable geolocation!");
+      }
+    },
+
+    async getCity({ lat, long }) {
       const url = `http://api.positionstack.com/v1/reverse?access_key=${process.env.VUE_APP_LOCATION_KEY}&query=${lat},${long}`;
-      this.get(url).then(response => {
-        console.log(response);
-        const region = response.body.data[0].region;
-        const country = response.body.data[0].country;
-        this.userRegion = `${region}, ${country}`;
-        this.save("location", { lat, long, region: this.userRegion });
-      });
+      const response = await this.get(url);
+      console.log(response);
+      const region = response.body.data[0].region;
+      const country = response.body.data[0].country;
+      this.userRegion = region;
+      this.userCountry = country;
+      this.save("location", { lat, long, region, country });
+      this.loading = false;
+    },
+
+    getSavedCoords() {
+      return this.retrieve("location", true);
     },
 
     compareCoords({ lat, long }) {
-      const location = this.retrieve("location", true);
+      const location = this.getSavedCoords();
       if (!location) return false;
       this.userRegion = location.region;
+      this.userCountry = location.country;
       const { lat: oldLat, long: oldLong } = location;
 
       return (
         oldLat.toFixed(5) === lat.toFixed(5) &&
         oldLong.toFixed(5) === long.toFixed(5)
       );
+    },
+
+    async getWeather() {
+      const key = "a34211b02a664017b85de5ad919937f5";
+      const { lat, long } = this.getSavedCoords();
+      console.log(lat, long);
+      const response = await this.get(
+        `https://api.weatherbit.io/v2.0/forecast/hourly?lat=${lat}&lon=${long}&key=${key}`
+      );
+
+      console.log(response);
+      const weather = response.body.data[0];
+      this.weather = weather.temp;
+      this.icon = weather.weather;
+      this.save("weather", { weather: this.weather, icon: this.icon });
+    },
+
+    async retrieveWeather() {
+      const weather = this.retrieve("weather", true);
+      if (weather) {
+        const timeDiff = new Date().getTime() - weather.time;
+        if (timeDiff / (60 * 60 * 1000) < 1) {
+          this.weather = weather.temp;
+          this.icon = weather.icon;
+        }
+        return;
+      }
+      await this.getWeather();
     }
   },
-  mounted() {
-    this.getLocation();
+  async mounted() {
+    this.loading = true;
+    await this.getLocation();
+    this.userRegion;
+    await this.getWeather();
+    this.loading = false;
   }
 };
 </script>
