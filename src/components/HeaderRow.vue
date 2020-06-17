@@ -11,7 +11,7 @@
     </div>
     <div class="weather-container">
       <div v-if="!loading">
-        <div class="weather-icon" href weather-icon="B"></div>
+        <div class="weather-icon" href :weather-icon="tempIcon"></div>
         <div class="temp">{{ weatherDisplay }}&#176;</div>
       </div>
       <div v-if="!loading" class="location">{{ fullRegion }}</div>
@@ -23,8 +23,10 @@
 import Input from "./shared/Input";
 import apiservice from "../mixins/apiservice";
 import storage from "../mixins/storage";
+import tempicons from "../mixins/tempicons";
+
 export default {
-  mixins: [apiservice, storage],
+  mixins: [apiservice, storage, tempicons],
   components: { "mc-input": Input },
   data() {
     return {
@@ -32,7 +34,8 @@ export default {
       userCountry: "",
       weather: null,
       icon: null,
-      loading: false
+      loading: false,
+      iconCode: ""
     };
   },
   computed: {
@@ -42,6 +45,12 @@ export default {
     weatherDisplay() {
       if (this.weather) {
         return this.weather.toFixed(0);
+      }
+      return "";
+    },
+    tempIcon() {
+      if (this.icon) {
+        return this.getIcon(this.icon);
       }
       return "";
     }
@@ -105,7 +114,7 @@ export default {
       console.log(response);
       const weather = response.body.data[0];
       this.weather = weather.temp;
-      this.icon = weather.weather;
+      this.icon = weather.weather.code;
       this.save("weather", {
         weather: this.weather,
         icon: this.icon,
