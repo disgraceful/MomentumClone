@@ -11,8 +11,8 @@
     </div>
     <div class="weather-container">
       <div v-if="!loading">
-        <i class="fas fa-sun fa-lg"></i>
-        <span>{{ weatherDisplay }}&#176;</span>
+        <div class="weather-icon" href weather-icon="B"></div>
+        <div class="temp">{{ weatherDisplay }}&#176;</div>
       </div>
       <div v-if="!loading" class="location">{{ fullRegion }}</div>
     </div>
@@ -153,22 +153,36 @@ export default {
   flex-direction: column;
   text-align: end;
 }
+.top-row > div > .search-wrapper {
+  position: relative;
+  display: inline-block;
+  font-size: 20px !important;
+}
 
-.top-row .weather-container * {
+.weather-container > div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.temp {
   font-size: 28px;
 }
 
 .weather-container .location {
   font-size: 18px;
+  margin-top: -5px;
 }
 
-.weather-container i {
-  padding: 0 10px;
-}
-
-.top-row > div > .search-wrapper {
-  position: relative;
+.weather-icon {
   display: inline-block;
-  font-size: 20px !important;
+  font-size: 40px;
+  padding: 0 5px;
+}
+
+.weather-icon::before {
+  font-family: "MeteoconsRegular";
+  color: #fff;
+  content: attr(weather-icon);
 }
 </style>
