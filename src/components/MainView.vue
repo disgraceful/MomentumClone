@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <div id="bg"></div>
+    <mc-bg></mc-bg>
     <div class="container">
       <mc-header></mc-header>
       <div class="gap"></div>
@@ -16,12 +16,15 @@ import Header from "./HeaderRow";
 import CenterRow from "./CenterRow";
 import LowerRow from "./LowerRow";
 import Footer from "./FooterRow";
+import Background from "./layer/Background";
+
 export default {
   components: {
     "mc-header": Header,
     "mc-center": CenterRow,
     "mc-lower": LowerRow,
-    "mc-footer": Footer
+    "mc-footer": Footer,
+    "mc-bg": Background
   }
 };
 </script>
@@ -29,20 +32,6 @@ export default {
 <style>
 #main {
   height: 100%;
-}
-#bg {
-  background-image: url("../img/test-bg.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-color: #464646;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -2;
 }
 
 .gap {
