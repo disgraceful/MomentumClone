@@ -1,16 +1,18 @@
 <template>
-  <div id="bg" :style="cssProps"></div>
+  <div id="bg" :style="cssProps">
+    <img v-if="image" style="opacity:0" :src="this.image.url" @load="$emit('loaded')" />
+  </div>
 </template>
 
 <script>
 import storage from "../../mixins/storage";
 import apiservice from "../../mixins/apiservice";
+import daypart from "../../mixins/daypart";
 export default {
-  mixins: [storage, apiservice],
+  mixins: [storage, apiservice, daypart],
   data() {
     return {
       image: null,
-      imageUrl: "",
       imgQueries: [
         "nature",
         "forest",
@@ -21,10 +23,17 @@ export default {
         "river",
         "valley",
         "sky",
-        "stars",
         "cliff",
         "sea"
-      ]
+      ],
+      nightQueries: [
+        "stars",
+        "dark forest",
+        "night city",
+        "evening",
+        "sunfall"
+      ],
+      morningQueries: ["sunrise", "meadow", "morning", "dawn"]
     };
   },
   computed: {
@@ -38,14 +47,29 @@ export default {
   },
   methods: {
     getRandomImgQuery() {
-      return this.imgQueries[
+      return this.getDailyQueries()[
         Math.floor(Math.random() * this.imgQueries.length)
       ];
     },
 
+    getImageOrientation(image) {
+      return image.width > image.height;
+    },
+
+    getDailyQueries() {
+      const dayPart = this.getDayPart();
+      if (dayPart === "morning") {
+        return this.morningQueries;
+      } else if (dayPart === "afternoon") {
+        return this.imgQueries;
+      } else {
+        return this.nightQueries;
+      }
+    },
+
     async retrieveImage() {
       const response = await this.get(
-        `https://api.pexels.com/v1/search?query=${this.getRandomImgQuery()}&per_page=5`,
+        `https://api.pexels.com/v1/search?query=${this.getRandomImgQuery()}&per_page=10`,
         {
           headers: {
             Authorization: process.env.VUE_APP_IMG_KEY
@@ -54,11 +78,15 @@ export default {
       );
       console.log(response);
       const allImages = response.body.photos;
+
+      const landscapeImages = allImages.filter(image =>
+        this.getImageOrientation(image)
+      );
       const selectedImage =
-        allImages[Math.floor(Math.random() * allImages.length)];
+        landscapeImages[Math.floor(Math.random() * landscapeImages.length)];
       this.image = {
         author: selectedImage.photographer,
-        url: selectedImage.src.landscape
+        url: selectedImage.src.original
       };
 
       console.log(this.image);
@@ -66,7 +94,6 @@ export default {
   },
   async created() {
     await this.retrieveImage();
-    this.$emit("loaded");
   }
 };
 </script>
@@ -75,7 +102,7 @@ export default {
   background-image: var(--bg-url);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-attachment: fixed;
   background-color: #464646;
   position: absolute;
