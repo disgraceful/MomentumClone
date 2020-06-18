@@ -1,5 +1,5 @@
 module.exports = {
   devServer: {
-    // proxy: "https://type.fit/",
+    proxy: "https://type.fit/",
   },
 };

@@ -38,10 +38,12 @@ export default {
           this.quote = {};
           this.quote.text = quoteSave.text;
           this.quote.author = quoteSave.author;
+        } else {
+          await this.requestQuote();
         }
-        return;
+      } else {
+        await this.requestQuote();
       }
-      await this.requestQuote();
     },
 
     async requestQuote() {

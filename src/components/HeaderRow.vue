@@ -130,10 +130,12 @@ export default {
         if (hourDiff < 1) {
           this.weather = weather.weather;
           this.icon = weather.icon;
+        } else {
+          await this.getWeather();
         }
-        return;
+      } else {
+        await this.getWeather();
       }
-      await this.getWeather();
     }
   },
   async mounted() {
