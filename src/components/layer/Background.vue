@@ -1,7 +1,6 @@
 <template>
-  <div id="bg"></div>
+  <div id="bg" :style="cssProps"></div>
 </template>
-
 
 <script>
 import storage from "../../mixins/storage";
@@ -10,6 +9,7 @@ export default {
   mixins: [storage, apiservice],
   data() {
     return {
+      image: null,
       imageUrl: "",
       imgQueries: [
         "nature",
@@ -21,9 +21,20 @@ export default {
         "river",
         "valley",
         "sky",
-        "stars"
+        "stars",
+        "cliff",
+        "sea"
       ]
     };
+  },
+  computed: {
+    cssProps() {
+      return {
+        "--bg-url": `url(${
+          this.image ? this.image.url : "../../img/test-bg.jpg"
+        })`
+      };
+    }
   },
   methods: {
     getRandomImgQuery() {
@@ -34,7 +45,7 @@ export default {
 
     async retrieveImage() {
       const response = await this.get(
-        `https://api.pexels.com/v1/search?query=${this.getRandomImgQuery()}`,
+        `https://api.pexels.com/v1/search?query=${this.getRandomImgQuery()}&per_page=5`,
         {
           headers: {
             Authorization: process.env.VUE_APP_IMG_KEY
@@ -42,16 +53,26 @@ export default {
         }
       );
       console.log(response);
+      const allImages = response.body.photos;
+      const selectedImage =
+        allImages[Math.floor(Math.random() * allImages.length)];
+      this.image = {
+        author: selectedImage.photographer,
+        url: selectedImage.src.landscape
+      };
+
+      console.log(this.image);
     }
   },
   async created() {
     await this.retrieveImage();
+    this.$emit("loaded");
   }
 };
 </script>
 <style scoped>
 #bg {
-  background-image: url("../../img/test-bg.jpg");
+  background-image: var(--bg-url);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

@@ -1,6 +1,6 @@
 <template>
-  <div id="main">
-    <mc-bg></mc-bg>
+  <div ref="main" id="main" class="loading">
+    <mc-bg @loaded="loadBg()"></mc-bg>
     <div class="container">
       <mc-header></mc-header>
       <div class="gap"></div>
@@ -25,6 +25,11 @@ export default {
     "mc-lower": LowerRow,
     "mc-footer": Footer,
     "mc-bg": Background
+  },
+  methods: {
+    loadBg() {
+      this.$refs.main.classList.remove("loading");
+    }
   }
 };
 </script>
@@ -32,6 +37,12 @@ export default {
 <style>
 #main {
   height: 100%;
+}
+
+#main.loading {
+  background-color: #fff;
+  z-index: 10;
+  opacity: 0;
 }
 
 .gap {
