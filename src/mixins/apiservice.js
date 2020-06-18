@@ -1,7 +1,7 @@
 export default {
   methods: {
-    get(url) {
-      return this.$http.get(url);
+    get(url, params) {
+      return this.$http.get(url, params);
     },
   },
 };
