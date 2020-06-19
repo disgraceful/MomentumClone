@@ -48,7 +48,7 @@ export default {
 
     async requestQuote() {
       try {
-        const result = await this.get("http://localhost:8080/api/quotes");
+        const result = await this.get("/quotes");
         const dailyQuote = this.selectRandomQuote(result.body);
         this.quote = {};
         this.quote.text = dailyQuote.text;

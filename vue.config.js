@@ -1,7 +1,12 @@
 module.exports = {
   devServer: {
-    // proxy: "https://type.fit/",
     proxy: {
+      "/quotes": {
+        target: "https://type.fit",
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: { "/quotes": "/api/quotes" },
+      },
       "/gsearch": {
         target: "https://www.google.com",
         changeOrigin: true,
