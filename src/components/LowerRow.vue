@@ -10,10 +10,11 @@
       <div>Today</div>
       <div class="focus-inputs">
         <label class="input-container">
-          {{focus}} {{done}}
           <input type="checkbox" v-model="done" />
           <span class="checkmark"></span>
+          <div>{{ focus }}</div>
         </label>
+        <div class="action-btn" @click="resetFocus()"></div>
       </div>
     </div>
   </div>
@@ -32,6 +33,11 @@ export default {
     };
   },
   methods: {
+    resetFocus() {
+      this.focus = "";
+      this.done = false;
+      this.newFocus();
+    },
     saveFocus() {
       if (this.focus !== null && this.focus !== "") {
         this.save("focus", { text: this.focus, done: false });
@@ -106,6 +112,8 @@ export default {
 .focus-inputs {
   display: flex;
   align-items: center;
+  margin-left: -20px;
+  position: relative;
 }
 
 .input-container {
@@ -115,11 +123,15 @@ export default {
   padding-left: 35px;
   margin: 12px 0;
   cursor: pointer;
-  font-size: 28px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.input-container > div {
+  font-size: 28px;
+  order: -1;
 }
 
 .input-container input {
@@ -139,6 +151,17 @@ export default {
   background-color: transparent;
   border: 2px #fff solid;
   border-radius: 15%;
+  opacity: 0;
+  transform: all 0.5s ease;
+}
+
+.focus-inputs:hover .checkmark,
+.input-container input:checked ~ .checkmark {
+  opacity: 1;
+}
+
+.input-container input:checked ~ div {
+  text-decoration: line-through;
 }
 
 .checkmark:after {
@@ -161,5 +184,52 @@ export default {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+  transform: all 0.5s ease;
+}
+
+.action-btn {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  margin-right: -40px;
+  padding: 10px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.5s;
+  right: 0;
+  background-color: rgba(224, 224, 224, 0.5);
+  cursor: pointer;
+}
+
+.action-btn::after,
+.action-btn::before {
+  content: "";
+  width: 18px;
+  height: 2px;
+  position: absolute;
+  transform: rotate(45deg);
+  background-color: #fff;
+  top: 14px;
+  right: 6px;
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.action-btn::after {
+  transform: rotate(45deg);
+}
+
+.action-btn::before {
+  transform: rotate(135deg);
+}
+
+.focus-inputs:hover > .action-btn::after,
+.focus-inputs:hover .action-btn::before {
+  opacity: 1;
+}
+
+.focus-inputs:hover > .action-btn {
+  opacity: 1;
 }
 </style>
