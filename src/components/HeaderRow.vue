@@ -2,7 +2,7 @@
   <div class="top-row">
     <div>
       <div class="search-wrapper">
-        <mc-input hover>
+        <mc-input hover v-model="searchQuery" @enter="search()">
           <template v-slot:icon>
             <i class="fas fa-search fa-lg icon"></i>
           </template>
@@ -35,7 +35,8 @@ export default {
       weather: null,
       icon: null,
       loading: false,
-      iconCode: ""
+      iconCode: "",
+      searchQuery: ""
     };
   },
   computed: {
@@ -56,6 +57,10 @@ export default {
     }
   },
   methods: {
+    search() {
+      window.location.href = `https://www.google.com/search?q=${this.searchQuery}`;
+    },
+
     getUserCoords() {
       return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
