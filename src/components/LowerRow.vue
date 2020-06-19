@@ -36,6 +36,7 @@ export default {
     resetFocus() {
       this.focus = "";
       this.done = false;
+      this.delete("focus");
       this.newFocus();
     },
     saveFocus() {

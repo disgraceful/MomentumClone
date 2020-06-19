@@ -78,6 +78,7 @@ export default {
   text-align: var(--text-align);
   max-width: 100%;
 }
+
 .inputbar::placeholder {
   color: inherit;
 }

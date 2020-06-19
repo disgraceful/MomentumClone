@@ -6,8 +6,8 @@
       <div v-if="!loading" class="quote-author">{{ quote.author }}</div>
     </div>
     <div class="todo">
-      <span>Todo</span>
-      <div class="todo-body"></div>
+      <span @click="todoVisible = !todoVisible">Todo</span>
+      <mc-todo-body :visible="todoVisible" @filled="todoVisible = true"></mc-todo-body>
     </div>
   </div>
 </template>
@@ -15,12 +15,16 @@
 <script>
 import apiservice from "../mixins/apiservice";
 import storage from "../mixins/storage";
+import ToDoDialog from "./layer/ToDoDialog";
+
 export default {
   mixins: [apiservice, storage],
+  components: { "mc-todo-body": ToDoDialog },
   data() {
     return {
       loading: true,
-      quote: null
+      quote: null,
+      todoVisible: null
     };
   },
   computed: {
@@ -135,6 +139,7 @@ export default {
 
 .todo > span {
   font-size: 22px;
+  cursor: pointer;
 }
 
 .img-info {
