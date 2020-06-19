@@ -3,11 +3,11 @@
     <div class="todo-header">Today</div>
     <div class="todo-container">
       <ul class="todo-list">
-        <li v-for="todo in todos" :key="todo">{{todo}}</li>
+        <li v-for="todo in todos" :key="todo">{{ todo }}</li>
       </ul>
     </div>
     <div class="todo-footer">
-      <mc-input placeholder="New Todo"></mc-input>
+      <mc-input v-model="newTodo" @enter="saveTodo()" placeholder="New Todo" no-underline></mc-input>
     </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   },
   components: { "mc-input": Input },
   data() {
-    return { todos: ["code", "book"] };
+    return { newTodo: "", todos: ["code", "book"] };
   },
   computed: {
     todoEmpty() {
@@ -31,6 +31,13 @@ export default {
       return {
         "--display": this.visible ? "block" : "none"
       };
+    }
+  },
+  methods: {
+    saveTodo() {
+      if (this.newTodo !== null && this.newTodo !== "") {
+        this.todos.push(this.newTodo);
+      }
     }
   },
   mounted() {
