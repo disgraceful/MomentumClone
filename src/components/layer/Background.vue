@@ -47,9 +47,8 @@ export default {
   },
   methods: {
     getRandomImgQuery() {
-      return this.getDailyQueries()[
-        Math.floor(Math.random() * this.imgQueries.length)
-      ];
+      const queryArray = this.getDailyQueries();
+      return queryArray[Math.floor(Math.random() * queryArray.length)];
     },
 
     getImageOrientation(image) {
