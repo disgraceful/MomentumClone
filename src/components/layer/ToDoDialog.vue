@@ -3,7 +3,13 @@
     <div class="todo-header">Today</div>
     <div class="todo-container">
       <ul class="todo-list">
-        <li v-for="todo in todos" :key="todo">{{ todo }}</li>
+        <li v-for="todo in todos" :key="todo">
+          <mc-checkbox>
+            <template v-slot:text>
+              <div class="todo-text">{{ todo }}</div>
+            </template>
+          </mc-checkbox>
+        </li>
       </ul>
     </div>
     <div class="todo-footer">
@@ -14,11 +20,12 @@
 
 <script>
 import Input from "../shared/Input";
+import Checkbox from "../shared/Checkbox";
 export default {
   props: {
     visible: Boolean
   },
-  components: { "mc-input": Input },
+  components: { "mc-input": Input, "mc-checkbox": Checkbox },
   data() {
     return { newTodo: "", todos: ["code", "book"] };
   },
@@ -54,12 +61,12 @@ export default {
   max-height: 250px;
   width: 300px;
   bottom: 45px;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.85);
   display: var(--display);
   padding: 10px 20px;
 }
 
-.todo-body div {
+.todo-header {
   font-size: 20px;
 }
 
@@ -77,6 +84,9 @@ export default {
 }
 
 .todo-footer div {
+  font-size: 16px;
+}
+.todo-text {
   font-size: 16px;
 }
 </style>
