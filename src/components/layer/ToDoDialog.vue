@@ -1,7 +1,7 @@
 <template>
   <div class="todo-body" :style="cssProps">
     <div class="todo-header">Today</div>
-    <div class="todo-container" :style="{minHeight:dialogActive?'150px':'auto'}">
+    <div class="todo-container">
       <ul class="todo-list" v-if="!todoEmpty">
         <li v-for="todo in todos" :key="todo">
           <mc-todo-row :todo="todo" @activated="dialogActive = $event"></mc-todo-row>
@@ -48,7 +48,8 @@ export default {
       return {
         "--display": this.visible ? "block" : "none",
         "--visibility": this.inputVisible ? "visible" : "hidden",
-        "--invisible": !this.inputVisible ? "visible" : "hidden"
+        "--invisible": !this.inputVisible ? "visible" : "hidden",
+        "--height": this.dialogActive ? "150px" : "0"
       };
     }
   },
@@ -85,11 +86,6 @@ export default {
         this.save("resetTime", todoResetTime);
       }
       return todoResetTime;
-    },
-
-    activate(event) {
-      console.log(event);
-      this.dialogActive = event;
     }
   },
   mounted() {
@@ -132,7 +128,8 @@ export default {
 
 .todo-container {
   padding-top: 5px;
-  height: var(--height);
+  min-height: var(--height);
+  transition: min-height 1s;
 }
 
 .todo-container ul {

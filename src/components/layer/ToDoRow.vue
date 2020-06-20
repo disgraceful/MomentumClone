@@ -89,8 +89,10 @@ export default {
   right: 50px;
   width: 100px;
   display: flex;
-  background-color: #333;
+  background-color: rgba(50, 50, 50);
   border-radius: 5px;
+  z-index: 10;
+  transition: all 1s ease;
 }
 .dialog ul {
   display: flex;
@@ -101,5 +103,10 @@ export default {
   display: flex;
   font-size: 16px;
   padding: 7px 12px;
+}
+
+.dialog li:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
 }
 </style>
