@@ -1,15 +1,10 @@
 <template>
   <div class="todo-body" :style="cssProps">
     <div class="todo-header">Today</div>
-    <div class="todo-container">
+    <div class="todo-container" :style="{minHeight:dialogActive?'150px':'auto'}">
       <ul class="todo-list" v-if="!todoEmpty">
         <li v-for="todo in todos" :key="todo">
-          <mc-checkbox>
-            <template v-slot:text>
-              <div class="todo-text">{{ todo }}</div>
-            </template>
-          </mc-checkbox>
-          <div></div>
+          <mc-todo-row :todo="todo" @activated="dialogActive = $event"></mc-todo-row>
         </li>
       </ul>
       <div class="add-todo" v-else>
@@ -25,16 +20,24 @@
 
 <script>
 import Input from "../shared/Input";
-import Checkbox from "../shared/Checkbox";
 import storage from "../../mixins/storage";
+import ToDoRowVue from "./ToDoRow.vue";
 export default {
   props: {
     visible: Boolean
   },
   mixins: [storage],
-  components: { "mc-input": Input, "mc-checkbox": Checkbox },
+  components: {
+    "mc-input": Input,
+    "mc-todo-row": ToDoRowVue
+  },
   data() {
-    return { newTodo: "", todos: ["code", "book"], inputVisible: false };
+    return {
+      newTodo: "",
+      todos: ["code", "book"],
+      inputVisible: false,
+      dialogActive: false
+    };
   },
   computed: {
     todoEmpty() {
@@ -66,14 +69,12 @@ export default {
       if (now.getTime() > midnight) {
         this.todos = [];
       }
-      console.log(this.todos);
     },
 
     midnightReset() {
       let todoResetTime = this.retrieve("resetTime");
       if (!todoResetTime) {
         const now = new Date();
-        console.log(now);
         const midnight = new Date(
           now.getFullYear(),
           now.getMonth(),
@@ -84,6 +85,11 @@ export default {
         this.save("resetTime", todoResetTime);
       }
       return todoResetTime;
+    },
+
+    activate(event) {
+      console.log(event);
+      this.dialogActive = event;
     }
   },
   mounted() {
@@ -104,7 +110,8 @@ export default {
   bottom: 45px;
   background-color: rgba(0, 0, 0, 0.95);
   display: var(--display);
-  padding: 10px 20px;
+  padding: 10px 0;
+  border-radius: 10px;
 }
 
 .todo-footer::after {
@@ -120,14 +127,16 @@ export default {
 
 .todo-header {
   font-size: 20px;
-}
-
-.todo-list {
-  list-style: none;
+  padding: 0 20px;
 }
 
 .todo-container {
   padding-top: 5px;
+  height: var(--height);
+}
+
+.todo-container ul {
+  list-style: none;
 }
 
 .add-todo {
@@ -156,10 +165,17 @@ export default {
   background-color: rgba(224, 224, 224, 0.7);
 }
 
-.todo-list > li {
-  font-size: 16px;
-  padding: 5px;
+.todo-list > li.active {
+  background-color: rgba(50, 50, 50, 0.6);
+}
+
+.todo-list > li > div {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  font-size: 16px;
+  padding: 2px 20px;
 }
 
 .todo-footer div {
