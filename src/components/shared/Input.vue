@@ -23,7 +23,8 @@ export default {
     },
     hover: Boolean,
     value: String,
-    placeholder: String
+    placeholder: String,
+    noUnderline: { type: Boolean, default: false }
   },
   data() {
     return {};
@@ -33,11 +34,12 @@ export default {
       return {
         "--text-align": this.textAlign,
         "--transparent": this.hover ? 0 : 1,
-        "--half-transparent": this.hover ? 0.5 : 1
+        "--half-transparent": this.hover ? 0.5 : 1,
+        "--width": this.$slots.icon ? "auto" : "100%",
+        "--line-visible": this.noUnderline ? "hidden" : "visible"
       };
     }
   },
-  methods: {},
   mounted() {
     this.input = this.$refs.search;
     this.container = this.$refs.container;
@@ -76,8 +78,9 @@ export default {
   padding: 8px;
   position: relative;
   text-align: var(--text-align);
-  max-width: 100%;
+  width: var(--width);
 }
+
 .inputbar::placeholder {
   color: inherit;
 }
@@ -95,6 +98,7 @@ export default {
   left: 0;
   opacity: var(--transparent);
   transition: all 0.5s;
+  visibility: var(--line-visible);
 }
 
 .input-container:hover .underline,
