@@ -2,7 +2,7 @@
   <div class="todo-body" :style="cssProps">
     <div class="todo-header">Today</div>
     <div class="todo-container">
-      <ul class="todo-list">
+      <ul class="todo-list" v-if="!todoEmpty">
         <li v-for="todo in todos" :key="todo">
           <mc-checkbox>
             <template v-slot:text>
@@ -11,6 +11,10 @@
           </mc-checkbox>
         </li>
       </ul>
+      <div class="add-todo" v-else>
+        <div>Add a todo to get started</div>
+        <div class="btn" @click="inputVisible = true">New Todo</div>
+      </div>
     </div>
     <div class="todo-footer">
       <mc-input v-model="newTodo" @enter="saveTodo()" placeholder="New Todo" no-underline></mc-input>
@@ -29,7 +33,7 @@ export default {
   mixins: [storage],
   components: { "mc-input": Input, "mc-checkbox": Checkbox },
   data() {
-    return { newTodo: "", todos: ["code", "book"] };
+    return { newTodo: "", todos: ["code", "book"], inputVisible: false };
   },
   computed: {
     todoEmpty() {
@@ -38,7 +42,9 @@ export default {
 
     cssProps() {
       return {
-        "--display": this.visible ? "block" : "none"
+        "--display": this.visible ? "block" : "none",
+        "--visibility": this.inputVisible ? "visible" : "hidden",
+        "--invisible": !this.inputVisible ? "visible" : "hidden"
       };
     }
   },
@@ -49,14 +55,41 @@ export default {
         this.save("todos", this.todos);
         this.newTodo = "";
       }
+    },
+
+    retrieveTodos() {
+      const todos = this.retrieve("todos", true);
+      this.todos = todos ? todos : [];
+      const now = new Date();
+      const midnight = this.midnightReset();
+      if (now.getTime() > midnight) {
+        this.todos = [];
+      }
+      console.log(this.todos);
+    },
+
+    midnightReset() {
+      let todoResetTime = this.retrieve("resetTime");
+      if (!todoResetTime) {
+        const now = new Date();
+        console.log(now);
+        const midnight = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          24
+        );
+        todoResetTime = midnight.getTime();
+        this.save("resetTime", todoResetTime);
+      }
+      return todoResetTime;
     }
   },
   mounted() {
-    const todos = this.retrieve("todos", true);
-    this.todos = todos ? todos : [];
-    console.log(this.todos);
+    this.retrieveTodos();
     if (!this.todoEmpty) {
       this.$emit("filled");
+      this.inputVisible = true;
     }
   }
 };
@@ -85,6 +118,32 @@ export default {
   padding-top: 5px;
 }
 
+.add-todo {
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-todo > div {
+  padding: 8px;
+  font-size: 16px;
+}
+
+.add-todo > .btn {
+  background-color: rgba(224, 224, 224, 0.5);
+  border-radius: 50px;
+  padding: 6px 16px;
+  cursor: pointer;
+  visibility: var(--invisible);
+}
+
+.btn:hover {
+  background-color: rgba(224, 224, 224, 0.7);
+}
+
 .todo-list > li {
   font-size: 16px;
   padding: 5px;
@@ -92,7 +151,9 @@ export default {
 
 .todo-footer div {
   font-size: 16px;
+  visibility: var(--visibility);
 }
+
 .todo-text {
   font-size: 16px;
 }
