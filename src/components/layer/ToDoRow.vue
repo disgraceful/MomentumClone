@@ -10,9 +10,9 @@
     </div>
     <div class="dialog" v-show="dialogVisible">
       <ul>
-        <li>Edit</li>
+        <li @click="editFnc">Edit</li>
         <hr />
-        <li>Delete</li>
+        <li @click="deleteFnc(todo)">Delete</li>
       </ul>
     </div>
   </div>
@@ -25,7 +25,8 @@ import { EventBus } from "../../eventbus";
 export default {
   props: {
     todo: String,
-    active: { type: Boolean, default: false }
+    editFnc: Function,
+    deleteFnc: Function
   },
   mixins: [domutils],
   components: { "mc-checkbox": CheckboxVue },

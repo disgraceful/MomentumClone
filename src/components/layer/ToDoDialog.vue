@@ -4,7 +4,12 @@
     <div class="todo-container">
       <ul class="todo-list" v-if="!todoEmpty">
         <li v-for="todo in todos" :key="todo">
-          <mc-todo-row :todo="todo" @activated="dialogActive = $event"></mc-todo-row>
+          <mc-todo-row
+            :todo="todo"
+            :deleteFnc="deleteTodo.bind(this)"
+            :editFnc="editTodo"
+            @activated="dialogActive = $event"
+          ></mc-todo-row>
         </li>
       </ul>
       <div class="add-todo" v-else>
@@ -70,6 +75,13 @@ export default {
       if (now.getTime() > midnight) {
         this.todos = [];
       }
+    },
+
+    editTodo() {},
+
+    deleteTodo(todo) {
+      this.todos = this.todos.filter(t => t !== todo);
+      this.save("todos", this.todos);
     },
 
     midnightReset() {
