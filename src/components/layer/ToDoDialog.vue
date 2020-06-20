@@ -21,10 +21,12 @@
 <script>
 import Input from "../shared/Input";
 import Checkbox from "../shared/Checkbox";
+import storage from "../../mixins/storage";
 export default {
   props: {
     visible: Boolean
   },
+  mixins: [storage],
   components: { "mc-input": Input, "mc-checkbox": Checkbox },
   data() {
     return { newTodo: "", todos: ["code", "book"] };
@@ -44,10 +46,15 @@ export default {
     saveTodo() {
       if (this.newTodo !== null && this.newTodo !== "") {
         this.todos.push(this.newTodo);
+        this.save("todos", this.todos);
+        this.newTodo = "";
       }
     }
   },
   mounted() {
+    const todos = this.retrieve("todos", true);
+    this.todos = todos ? todos : [];
+    console.log(this.todos);
     if (!this.todoEmpty) {
       this.$emit("filled");
     }

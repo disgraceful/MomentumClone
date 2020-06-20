@@ -75,7 +75,6 @@ export default {
           }
         }
       );
-      console.log(response);
       const allImages = response.body.photos;
 
       const landscapeImages = allImages.filter(image =>
@@ -87,8 +86,6 @@ export default {
         author: selectedImage.photographer,
         url: selectedImage.src.original
       };
-
-      console.log(this.image);
     }
   },
   async created() {
