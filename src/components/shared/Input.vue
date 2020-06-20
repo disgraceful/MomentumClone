@@ -41,7 +41,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.$slots);
     this.input = this.$refs.search;
     this.container = this.$refs.container;
     this.input.onfocus = () => {
