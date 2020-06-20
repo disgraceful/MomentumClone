@@ -9,6 +9,7 @@
               <div class="todo-text">{{ todo }}</div>
             </template>
           </mc-checkbox>
+          <div></div>
         </li>
       </ul>
       <div class="add-todo" v-else>
@@ -101,9 +102,20 @@ export default {
   max-height: 250px;
   width: 300px;
   bottom: 45px;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.95);
   display: var(--display);
   padding: 10px 20px;
+}
+
+.todo-footer::after {
+  content: "";
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.95);
+  width: 14px;
+  height: 14px;
+  bottom: -7px;
+  right: 14px;
+  transform: rotate(45deg);
 }
 
 .todo-header {
@@ -147,6 +159,7 @@ export default {
 .todo-list > li {
   font-size: 16px;
   padding: 5px;
+  display: flex;
 }
 
 .todo-footer div {
