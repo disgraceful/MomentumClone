@@ -91,6 +91,7 @@ export default {
   position: relative;
   text-align: var(--text-align);
   width: var(--width);
+  text-decoration: inherit;
 }
 
 .inputbar::placeholder {

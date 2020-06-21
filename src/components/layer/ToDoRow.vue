@@ -1,6 +1,6 @@
 <template>
   <div class="li-container">
-    <mc-checkbox>
+    <mc-checkbox v-model="todoModel.done" @input="editTodo()">
       <template v-slot:text>
         <div class="todo-text" v-show="!editMode">{{ todoModel.text }}</div>
         <div class="hidden-edit" v-show="editMode">
@@ -65,17 +65,11 @@ export default {
       if (this.todoModel.text === "") {
         this.todoModel = this.todo;
       }
-
       this.editFnc(this.todoModel, this.todo);
       this.editMode = false;
     }
   },
   created() {
-    console.log(this.todo);
-    console.log(this.todoModel);
-    const test = this.todo;
-    test.a = 1;
-    console.log(test);
     this.$set(this.todoModel, "text", this.todo.text);
     this.$set(this.todoModel, "done", this.todo.done);
     EventBus.$on("off", event => {
