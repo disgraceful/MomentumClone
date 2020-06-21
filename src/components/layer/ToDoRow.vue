@@ -1,16 +1,20 @@
 <template>
   <div class="li-container">
-    <mc-checkbox>
+    <mc-checkbox v-model="todoModel.done" @input="editTodo()">
       <template v-slot:text>
-        <div class="todo-text">{{ todo }}</div>
+        <div class="todo-text" v-show="!editMode">{{ todoModel.text }}</div>
+        <div class="hidden-edit" v-show="editMode">
+          <mc-input ref="editInput" no-underline v-model="todoModel.text" @enter="editTodo()"></mc-input>
+        </div>
       </template>
     </mc-checkbox>
+
     <div class="hover-btn" @click="activateDialog($event)">
       <i class="fa fa-ellipsis-h fa-lg"></i>
     </div>
     <div class="dialog" v-show="dialogVisible">
       <ul>
-        <li @click="editFnc">Edit</li>
+        <li @click="activateEditing()">Edit</li>
         <hr />
         <li @click="deleteFnc(todo)">Delete</li>
       </ul>
@@ -22,18 +26,24 @@
 import CheckboxVue from "../shared/Checkbox.vue";
 import domutils from "../../mixins/domutils";
 import { EventBus } from "../../eventbus";
+import Input from "../shared/Input";
 export default {
   props: {
-    todo: String,
+    todo: Object,
     editFnc: Function,
     deleteFnc: Function
   },
   mixins: [domutils],
-  components: { "mc-checkbox": CheckboxVue },
+  components: {
+    "mc-checkbox": CheckboxVue,
+    "mc-input": Input
+  },
   data() {
     return {
       liParent: null,
-      dialogVisible: false
+      dialogVisible: false,
+      editMode: false,
+      todoModel: { text: "", done: false }
     };
   },
   methods: {
@@ -42,25 +52,57 @@ export default {
       this.dialogVisible = !this.dialogVisible;
       this.$emit("activated", this.dialogVisible);
       EventBus.$emit("off", this);
+      this.editMode = false;
+    },
+
+    activateEditing() {
+      this.activateDialog();
+      this.editMode = true;
+      this.$refs.editInput.focusInput();
+    },
+
+    editTodo() {
+      if (this.todoModel.text === "") {
+        this.todoModel = this.todo;
+      }
+      this.editFnc(this.todoModel, this.todo);
+      this.editMode = false;
     }
+  },
+  created() {
+    this.$set(this.todoModel, "text", this.todo.text);
+    this.$set(this.todoModel, "done", this.todo.done);
+    EventBus.$on("off", event => {
+      if (event !== this) {
+        this.dialogVisible = false;
+        this.editMode = false;
+        this.liParent.classList.remove("active");
+      }
+    });
   },
   mounted() {
     const element = this.findDOMElement(this.$el, "li", true);
     if (element) {
       this.liParent = element;
     }
-
-    EventBus.$on("off", event => {
-      if (event !== this && this.dialogVisible) {
-        this.dialogVisible = false;
-        this.liParent.classList.toggle("active");
-      }
-    });
   }
 };
 </script>
 
 <style scoped>
+.li-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  font-size: 16px;
+  padding: 2px 20px;
+}
+
+.hidden-edit {
+  font-size: 16px;
+}
+
 .todo-text {
   font-size: 16px;
 }
@@ -95,6 +137,7 @@ export default {
   z-index: 10;
   transition: all 1s ease;
 }
+
 .dialog ul {
   display: flex;
   flex-direction: column;

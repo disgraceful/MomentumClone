@@ -3,11 +3,11 @@
     <div class="todo-header">Today</div>
     <div class="todo-container">
       <ul class="todo-list" v-if="!todoEmpty">
-        <li v-for="todo in todos" :key="todo">
+        <li v-for="todo in todos" :key="todo.text">
           <mc-todo-row
             :todo="todo"
             :deleteFnc="deleteTodo.bind(this)"
-            :editFnc="editTodo"
+            :editFnc="editTodo.bind(this)"
             @activated="dialogActive = $event"
           ></mc-todo-row>
         </li>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       newTodo: "",
-      todos: ["code", "book"],
+      todos: [],
       inputVisible: false,
       dialogActive: false
     };
@@ -61,7 +61,7 @@ export default {
   methods: {
     saveTodo() {
       if (this.newTodo !== null && this.newTodo !== "") {
-        this.todos.push(this.newTodo);
+        this.todos.push({ text: this.newTodo, done: false });
         this.save("todos", this.todos);
         this.newTodo = "";
       }
@@ -70,34 +70,53 @@ export default {
     retrieveTodos() {
       const todos = this.retrieve("todos", true);
       this.todos = todos ? todos : [];
+
+      let todoResetTime = this.retrieve("resetTime");
+      if (!todoResetTime) {
+        todoResetTime = this.midnightReset();
+      }
+
       const now = new Date();
-      const midnight = this.midnightReset();
-      if (now.getTime() > midnight) {
+      if (now.getTime() > todoResetTime) {
         this.todos = [];
+        this.midnightReset();
       }
     },
 
-    editTodo() {},
-
-    deleteTodo(todo) {
-      this.todos = this.todos.filter(t => t !== todo);
+    editTodo(newTodo, oldTodo) {
+      let index = 0;
+      for (let i = 0; i < this.todos.length; i++) {
+        if (this.todos[i].text === oldTodo.text) index = i;
+      }
+      this.todos.splice(index, 1, newTodo);
       this.save("todos", this.todos);
     },
 
-    midnightReset() {
-      let todoResetTime = this.retrieve("resetTime");
-      if (!todoResetTime) {
-        const now = new Date();
-        const midnight = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          24
-        );
-        todoResetTime = midnight.getTime();
-        this.save("resetTime", todoResetTime);
+    deleteTodo(todo) {
+      this.todos = this.todos.filter(t => t.text !== todo.text);
+      this.save("todos", this.todos);
+      this.dialogActive = false;
+      if (this.todos.length <= 0) {
+        this.inputVisible = false;
       }
+    },
+
+    midnightReset() {
+      const now = new Date();
+      const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        24
+      );
+      const todoResetTime = midnight.getTime();
+      this.save("resetTime", todoResetTime);
       return todoResetTime;
+    },
+
+    calcDate(time) {
+      const date = new Date(time);
+      console.log(date.getDate());
     }
   },
   mounted() {
@@ -178,18 +197,11 @@ export default {
   background-color: rgba(50, 50, 50, 0.6);
 }
 
-.todo-list > li > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  font-size: 16px;
-  padding: 2px 20px;
-}
-
 .todo-footer div {
   font-size: 16px;
   visibility: var(--visibility);
+  padding: 0 20px;
+  padding-top: 10px;
 }
 
 .todo-text {
