@@ -78,9 +78,10 @@ export default {
     }
 
     EventBus.$on("off", event => {
-      if (event !== this && this.dialogVisible) {
+      if (event !== this) {
         this.dialogVisible = false;
-        this.liParent.classList.toggle("active");
+        this.editMode = false;
+        this.liParent.classList.remove("active");
       }
     });
   }
