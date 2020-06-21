@@ -3,7 +3,7 @@
     <div class="todo-header">Today</div>
     <div class="todo-container">
       <ul class="todo-list" v-if="!todoEmpty">
-        <li v-for="todo in todos" :key="todo">
+        <li v-for="todo in todos" :key="todo.text">
           <mc-todo-row
             :todo="todo"
             :deleteFnc="deleteTodo.bind(this)"
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       newTodo: "",
-      todos: ["code", "book"],
+      todos: [],
       inputVisible: false,
       dialogActive: false
     };
@@ -61,7 +61,7 @@ export default {
   methods: {
     saveTodo() {
       if (this.newTodo !== null && this.newTodo !== "") {
-        this.todos.push(this.newTodo);
+        this.todos.push({ text: this.newTodo, done: false });
         this.save("todos", this.todos);
         this.newTodo = "";
       }
@@ -86,13 +86,14 @@ export default {
     editTodo(newTodo, oldTodo) {
       let index = 0;
       for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i] === oldTodo) index = i;
+        if (this.todos[i].text === oldTodo.text) index = i;
       }
       this.todos.splice(index, 1, newTodo);
+      this.save("todos", this.todos);
     },
 
     deleteTodo(todo) {
-      this.todos = this.todos.filter(t => t !== todo);
+      this.todos = this.todos.filter(t => t.text !== todo.text);
       this.save("todos", this.todos);
       this.dialogActive = false;
       if (this.todos.length <= 0) {

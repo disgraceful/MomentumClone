@@ -2,9 +2,9 @@
   <div class="li-container">
     <mc-checkbox>
       <template v-slot:text>
-        <div class="todo-text" v-show="!editMode">{{ todoModel }}</div>
+        <div class="todo-text" v-show="!editMode">{{ todoModel.text }}</div>
         <div class="hidden-edit" v-show="editMode">
-          <mc-input ref="editInput" no-underline v-model="todoModel" @enter="editTodo()"></mc-input>
+          <mc-input ref="editInput" no-underline v-model="todoModel.text" @enter="editTodo()"></mc-input>
         </div>
       </template>
     </mc-checkbox>
@@ -29,7 +29,7 @@ import { EventBus } from "../../eventbus";
 import Input from "../shared/Input";
 export default {
   props: {
-    todo: String,
+    todo: Object,
     editFnc: Function,
     deleteFnc: Function
   },
@@ -43,7 +43,7 @@ export default {
       liParent: null,
       dialogVisible: false,
       editMode: false,
-      todoModel: ""
+      todoModel: { text: "", done: false }
     };
   },
   methods: {
@@ -57,26 +57,27 @@ export default {
 
     activateEditing() {
       this.activateDialog();
-      this.editMode = !this.editMode;
-
+      this.editMode = true;
       this.$refs.editInput.focusInput();
     },
 
     editTodo() {
-      if (this.todoModel === "") {
+      if (this.todoModel.text === "") {
         this.todoModel = this.todo;
       }
+
       this.editFnc(this.todoModel, this.todo);
       this.editMode = false;
     }
   },
-  mounted() {
-    this.todoModel = this.todo;
-    const element = this.findDOMElement(this.$el, "li", true);
-    if (element) {
-      this.liParent = element;
-    }
-
+  created() {
+    console.log(this.todo);
+    console.log(this.todoModel);
+    const test = this.todo;
+    test.a = 1;
+    console.log(test);
+    this.$set(this.todoModel, "text", this.todo.text);
+    this.$set(this.todoModel, "done", this.todo.done);
     EventBus.$on("off", event => {
       if (event !== this) {
         this.dialogVisible = false;
@@ -84,6 +85,12 @@ export default {
         this.liParent.classList.remove("active");
       }
     });
+  },
+  mounted() {
+    const element = this.findDOMElement(this.$el, "li", true);
+    if (element) {
+      this.liParent = element;
+    }
   }
 };
 </script>
