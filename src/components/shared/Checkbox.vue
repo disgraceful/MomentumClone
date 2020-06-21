@@ -1,7 +1,7 @@
 <template>
   <div class="input-wrapper" :style="cssProps">
     <label class="inputs">
-      <input type="checkbox" />
+      <input type="checkbox" v-model="checked" @change="$emit('input',checkedProxy)" />
       <span class="checkmark"></span>
       <slot name="text"></slot>
     </label>
@@ -11,13 +11,30 @@
 
 <script>
 export default {
+  props: {
+    value: Boolean
+  },
+  data() {
+    return {
+      checkedProxy: false
+    };
+  },
+
   computed: {
+    checked: {
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.checkedProxy = val;
+      }
+    },
     isTextPresent() {
       return this.$slots.text;
     },
     cssProps() {
       return {
-        "--text-decorate": this.isTextPresent ? "line-through" : "none"
+        "--text-decorate": this.value ? "line-through" : "none"
       };
     }
   }
