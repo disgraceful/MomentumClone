@@ -7,7 +7,7 @@
           <mc-todo-row
             :todo="todo"
             :deleteFnc="deleteTodo.bind(this)"
-            :editFnc="editTodo"
+            :editFnc="editTodo.bind(this)"
             @activated="dialogActive = $event"
           ></mc-todo-row>
         </li>
@@ -83,12 +83,21 @@ export default {
       }
     },
 
-    editTodo() {},
+    editTodo(newTodo, oldTodo) {
+      let index = 0;
+      for (let i = 0; i < this.todos.length; i++) {
+        if (this.todos[i] === oldTodo) index = i;
+      }
+      this.todos.splice(index, 1, newTodo);
+    },
 
     deleteTodo(todo) {
       this.todos = this.todos.filter(t => t !== todo);
       this.save("todos", this.todos);
       this.dialogActive = false;
+      if (this.todos.length <= 0) {
+        this.inputVisible = false;
+      }
     },
 
     midnightReset() {
@@ -187,19 +196,11 @@ export default {
   background-color: rgba(50, 50, 50, 0.6);
 }
 
-.todo-list > li > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  font-size: 16px;
-  padding: 2px 20px;
-}
-
 .todo-footer div {
   font-size: 16px;
   visibility: var(--visibility);
-  padding: 0 12px;
+  padding: 0 20px;
+  padding-top: 10px;
 }
 
 .todo-text {

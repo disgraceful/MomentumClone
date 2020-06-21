@@ -2,15 +2,19 @@
   <div class="li-container">
     <mc-checkbox>
       <template v-slot:text>
-        <div class="todo-text">{{ todo }}</div>
+        <div class="todo-text" v-show="!editMode">{{ todoModel }}</div>
+        <div class="hidden-edit" v-show="editMode">
+          <mc-input ref="editInput" no-underline v-model="todoModel" @enter="editTodo()"></mc-input>
+        </div>
       </template>
     </mc-checkbox>
+
     <div class="hover-btn" @click="activateDialog($event)">
       <i class="fa fa-ellipsis-h fa-lg"></i>
     </div>
     <div class="dialog" v-show="dialogVisible">
       <ul>
-        <li @click="editFnc">Edit</li>
+        <li @click="activateEditing()">Edit</li>
         <hr />
         <li @click="deleteFnc(todo)">Delete</li>
       </ul>
@@ -22,6 +26,7 @@
 import CheckboxVue from "../shared/Checkbox.vue";
 import domutils from "../../mixins/domutils";
 import { EventBus } from "../../eventbus";
+import Input from "../shared/Input";
 export default {
   props: {
     todo: String,
@@ -29,11 +34,16 @@ export default {
     deleteFnc: Function
   },
   mixins: [domutils],
-  components: { "mc-checkbox": CheckboxVue },
+  components: {
+    "mc-checkbox": CheckboxVue,
+    "mc-input": Input
+  },
   data() {
     return {
       liParent: null,
-      dialogVisible: false
+      dialogVisible: false,
+      editMode: false,
+      todoModel: ""
     };
   },
   methods: {
@@ -42,9 +52,26 @@ export default {
       this.dialogVisible = !this.dialogVisible;
       this.$emit("activated", this.dialogVisible);
       EventBus.$emit("off", this);
+      this.editMode = false;
+    },
+
+    activateEditing() {
+      this.activateDialog();
+      this.editMode = !this.editMode;
+
+      this.$refs.editInput.focusInput();
+    },
+
+    editTodo() {
+      if (this.todoModel === "") {
+        this.todoModel = this.todo;
+      }
+      this.editFnc(this.todoModel, this.todo);
+      this.editMode = false;
     }
   },
   mounted() {
+    this.todoModel = this.todo;
     const element = this.findDOMElement(this.$el, "li", true);
     if (element) {
       this.liParent = element;
@@ -61,6 +88,19 @@ export default {
 </script>
 
 <style scoped>
+.li-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  font-size: 16px;
+  padding: 2px 20px;
+}
+
+.hidden-edit {
+  font-size: 16px;
+}
+
 .todo-text {
   font-size: 16px;
 }
@@ -95,6 +135,7 @@ export default {
   z-index: 10;
   transition: all 1s ease;
 }
+
 .dialog ul {
   display: flex;
   flex-direction: column;
