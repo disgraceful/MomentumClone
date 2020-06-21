@@ -74,6 +74,7 @@ export default {
   position: relative;
   font-size: inherit;
   text-align: center;
+  text-decoration: inherit;
 }
 
 .input-container .icon {
