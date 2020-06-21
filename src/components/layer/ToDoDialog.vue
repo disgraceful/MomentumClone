@@ -70,10 +70,16 @@ export default {
     retrieveTodos() {
       const todos = this.retrieve("todos", true);
       this.todos = todos ? todos : [];
+
+      let todoResetTime = this.retrieve("resetTime");
+      if (!todoResetTime) {
+        todoResetTime = this.midnightReset();
+      }
+
       const now = new Date();
-      const midnight = this.midnightReset();
-      if (now.getTime() > midnight) {
+      if (now.getTime() > todoResetTime) {
         this.todos = [];
+        this.midnightReset();
       }
     },
 
@@ -82,22 +88,25 @@ export default {
     deleteTodo(todo) {
       this.todos = this.todos.filter(t => t !== todo);
       this.save("todos", this.todos);
+      this.dialogActive = false;
     },
 
     midnightReset() {
-      let todoResetTime = this.retrieve("resetTime");
-      if (!todoResetTime) {
-        const now = new Date();
-        const midnight = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          24
-        );
-        todoResetTime = midnight.getTime();
-        this.save("resetTime", todoResetTime);
-      }
+      const now = new Date();
+      const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        24
+      );
+      const todoResetTime = midnight.getTime();
+      this.save("resetTime", todoResetTime);
       return todoResetTime;
+    },
+
+    calcDate(time) {
+      const date = new Date(time);
+      console.log(date.getDate());
     }
   },
   mounted() {
@@ -190,6 +199,7 @@ export default {
 .todo-footer div {
   font-size: 16px;
   visibility: var(--visibility);
+  padding: 0 12px;
 }
 
 .todo-text {
