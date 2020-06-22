@@ -3,7 +3,13 @@
     <div ref="greeting" class="greeting" v-show="nameKnown">
       {{ greeting }}
       <span>{{ name }}</span>
-      <div class="remove-btn" @click="clearName()"></div>
+      <div class="remove-container">
+        <mc-fab small>
+          <template v-slot:content>
+            <div class="remove-btn" @click="clearName()"></div>
+          </template>
+        </mc-fab>
+      </div>
     </div>
     <div class="name" v-show="!nameKnown">
       <mc-input
@@ -18,11 +24,12 @@
 
 <script>
 import Input from "../shared/Input";
+import Fab from "../shared/Fab";
 import storage from "../../mixins/storage";
 import apiservice from "../../mixins/apiservice";
 import daypart from "../../mixins/daypart";
 export default {
-  components: { "mc-input": Input },
+  components: { "mc-input": Input, "mc-fab": Fab },
   mixins: [storage, apiservice, daypart],
   data() {
     return {
@@ -31,7 +38,6 @@ export default {
       greeting: ""
     };
   },
-  computed: {},
   methods: {
     enterName() {
       if (this.name !== null && this.name !== "") {
@@ -60,11 +66,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .greeting-wrapper {
   display: flex;
   flex-direction: row;
-  font-size: 500%;
+  font-size: 50px;
   justify-content: center;
   position: relative;
 }
@@ -73,16 +79,23 @@ export default {
   font-size: inherit;
 }
 
-.remove-btn {
-  display: inline-block;
-  height: 30px;
-  width: 30px;
+.greeting {
+  position: relative;
+}
+
+.remove-container {
   position: absolute;
-  margin-left: 10px;
-  padding: 10px;
+  top: 0;
+  right: -40px;
+}
+
+.remove-btn {
+  height: 18px;
+  width: 18px;
   border-radius: 50%;
-  opacity: 0;
+  opacity: 0.8;
   transition: all 0.5s;
+  position: relative;
 }
 
 .remove-btn::after,
@@ -93,24 +106,9 @@ export default {
   position: absolute;
   transform: rotate(45deg);
   background-color: #fff;
-  top: 13px;
-  right: 6px;
-  opacity: 0;
+  top: 8px;
+  left: 0px;
   transition: all 0.5s;
-}
-
-.greeting > span:hover ~ .remove-btn::after,
-.greeting > span:hover ~ .remove-btn::before,
-.remove-btn:hover::after,
-.remove-btn:hover::before {
-  opacity: 0.8;
-}
-
-.greeting > span:hover ~ .remove-btn,
-.remove-btn:hover {
-  background-color: rgba(224, 224, 224, 0.5);
-  opacity: 1;
-  cursor: pointer;
 }
 
 .remove-btn::after {
@@ -119,5 +117,10 @@ export default {
 
 .remove-btn::before {
   transform: rotate(135deg);
+}
+
+.greeting > span:hover ~ .remove-container > div {
+  opacity: 1 !important;
+  background-color: rgba(224, 224, 224, 0.5);
 }
 </style>

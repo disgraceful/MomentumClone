@@ -81,7 +81,6 @@ export default {
   display: flex;
   flex-direction: row;
   text-align: center;
-  margin: 0 auto;
   position: relative;
 }
 
@@ -92,7 +91,7 @@ export default {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: -70px;
+  right: -60px;
 }
 
 .time:hover .time-select > div,
