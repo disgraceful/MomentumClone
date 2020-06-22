@@ -12,7 +12,7 @@
     <div class="weather-container">
       <div v-if="!loading">
         <div class="weather-icon" href :weather-icon="tempIcon"></div>
-        <div class="temp">{{ weatherDisplay }}&#176;</div>
+        <div class="temp">{{ temperature }}&#176;</div>
       </div>
       <div v-if="!loading" class="location">{{ fullRegion }}</div>
     </div>
@@ -42,12 +42,14 @@ export default {
     fullRegion() {
       return `${this.userRegion}, ${this.userCountry}`;
     },
-    weatherDisplay() {
+
+    temperature() {
       if (this.weather) {
         return this.weather.toFixed(0);
       }
       return "";
     },
+
     tempIcon() {
       if (this.icon) {
         return this.getIcon(this.icon);
@@ -91,11 +93,11 @@ export default {
     },
 
     getSavedCoords() {
-      return this.retrieve("location", true);
+      return;
     },
 
     compareCoords({ lat, long }) {
-      const location = this.getSavedCoords();
+      const location = this.retrieve("location", true);
       if (!location) return false;
       this.userRegion = location.region;
       this.userCountry = location.country;
@@ -108,10 +110,9 @@ export default {
     },
 
     async getWeather() {
-      const key = "a34211b02a664017b85de5ad919937f5";
-      const { lat, long } = this.getSavedCoords();
+      const { lat, long } = this.retrieve("location", true);
       const response = await this.get(
-        `https://api.weatherbit.io/v2.0/forecast/hourly?lat=${lat}&lon=${long}&key=${key}`
+        `https://api.weatherbit.io/v2.0/forecast/hourly?lat=${lat}&lon=${long}&key=${process.env.VUE_APP_WEATHER_KEY}`
       );
 
       console.log(response);
