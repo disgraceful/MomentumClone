@@ -14,11 +14,17 @@
       </ul>
       <div class="add-todo" v-else>
         <div>Add a todo to get started</div>
-        <div class="btn" @click="inputVisible = true">New Todo</div>
+        <div class="btn" @click="todoVisible()">New Todo</div>
       </div>
     </div>
     <div class="todo-footer">
-      <mc-input v-model="newTodo" @enter="saveTodo()" placeholder="New Todo" no-underline></mc-input>
+      <mc-input
+        ref="input"
+        v-model="newTodo"
+        @enter="saveTodo()"
+        placeholder="New Todo"
+        no-underline
+      ></mc-input>
     </div>
   </div>
 </template>
@@ -59,6 +65,11 @@ export default {
     }
   },
   methods: {
+    todoVisible() {
+      this.inputVisible = true;
+      this.$refs.input.focusInput();
+    },
+
     saveTodo() {
       if (this.newTodo !== null && this.newTodo !== "") {
         this.todos.push({ text: this.newTodo, done: false });
