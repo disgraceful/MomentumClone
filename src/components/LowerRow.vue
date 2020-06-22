@@ -115,6 +115,7 @@ export default {
   text-align: center;
   bottom: 0px;
   transition: all 0.5s ease;
+  user-select: none;
 }
 
 .focus.active {
