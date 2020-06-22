@@ -7,12 +7,6 @@ module.exports = {
         ws: true,
         pathRewrite: { "/quotes": "/api/quotes" },
       },
-      "/gsearch": {
-        target: "https://www.google.com",
-        changeOrigin: true,
-        ws: true,
-        pathRewrite: { "/gsearch": "/search" },
-      },
     },
   },
 };

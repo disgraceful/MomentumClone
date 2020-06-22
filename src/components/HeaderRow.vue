@@ -2,9 +2,9 @@
   <div class="top-row">
     <div>
       <div class="search-wrapper">
-        <mc-input hover v-model="searchQuery" @enter="search()">
+        <mc-input ref="search" hover v-model="searchQuery" @enter="search()">
           <template v-slot:icon>
-            <i class="fas fa-search fa-lg icon"></i>
+            <i class="fas fa-search fa-lg icon" @click="$refs.search.focusInput()"></i>
           </template>
         </mc-input>
       </div>
@@ -35,7 +35,6 @@ export default {
       weather: null,
       icon: null,
       loading: false,
-      iconCode: "",
       searchQuery: ""
     };
   },
@@ -83,7 +82,6 @@ export default {
     async getCity({ lat, long }) {
       const url = `http://api.positionstack.com/v1/reverse?access_key=${process.env.VUE_APP_LOCATION_KEY}&query=${lat},${long}`;
       const response = await this.get(url);
-      console.log(response);
       const region = response.body.data[0].region;
       const country = response.body.data[0].country;
       this.userRegion = region;
