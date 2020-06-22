@@ -48,7 +48,7 @@ export default {
       liParent: null,
       dialogVisible: false,
       editMode: false,
-      todoModel: { text: "", done: false }
+      todoModel: { id: 0, text: "", done: false }
     };
   },
   methods: {
@@ -75,6 +75,7 @@ export default {
     }
   },
   created() {
+    this.$set(this.todoModel, "id", this.todo.id);
     this.$set(this.todoModel, "text", this.todo.text);
     this.$set(this.todoModel, "done", this.todo.done);
     EventBus.$on("off", event => {

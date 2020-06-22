@@ -3,7 +3,7 @@
     <div class="todo-header">Today</div>
     <div class="todo-container">
       <ul class="todo-list" v-if="!todoEmpty">
-        <li v-for="todo in todos" :key="todo.text">
+        <li v-for="todo in todos" :key="todo.id">
           <mc-todo-row
             :todo="todo"
             :deleteFnc="deleteTodo.bind(this)"
@@ -72,7 +72,7 @@ export default {
 
     saveTodo() {
       if (this.newTodo !== null && this.newTodo !== "") {
-        this.todos.push({ text: this.newTodo, done: false });
+        this.todos.push({ id: Math.random(), text: this.newTodo, done: false });
         this.save("todos", this.todos);
         this.newTodo = "";
       }
@@ -97,14 +97,14 @@ export default {
     editTodo(newTodo, oldTodo) {
       let index = 0;
       for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].text === oldTodo.text) index = i;
+        if (this.todos[i].id === oldTodo.id) index = i;
       }
       this.todos.splice(index, 1, newTodo);
       this.save("todos", this.todos);
     },
 
     deleteTodo(todo) {
-      this.todos = this.todos.filter(t => t.text !== todo.text);
+      this.todos = this.todos.filter(t => t.id !== todo.id);
       this.save("todos", this.todos);
       this.dialogActive = false;
       if (this.todos.length <= 0) {
@@ -123,11 +123,6 @@ export default {
       const todoResetTime = midnight.getTime();
       this.save("resetTime", todoResetTime);
       return todoResetTime;
-    },
-
-    calcDate(time) {
-      const date = new Date(time);
-      console.log(date.getDate());
     }
   },
   mounted() {
