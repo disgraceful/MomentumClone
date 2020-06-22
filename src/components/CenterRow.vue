@@ -3,8 +3,16 @@
     <div class="time-wrapper">
       <div class="time">{{ selectedFormat === 12 ? time12 : time24 }}</div>
       <div class="time-select">
-        <div @click="saveFormat(12)">12</div>
-        <div @click="saveFormat(24)">24</div>
+        <mc-fab @click="saveFormat(12)" fontSize="28px">
+          <template v-slot:content>
+            <span>12</span>
+          </template>
+        </mc-fab>
+        <mc-fab @click="saveFormat(24)" fontSize="28px">
+          <template v-slot:content>
+            <span>24</span>
+          </template>
+        </mc-fab>
       </div>
     </div>
     <mc-greeting-wrapper></mc-greeting-wrapper>
@@ -15,10 +23,12 @@
 import time from "../mixins/time";
 import storage from "../mixins/storage";
 import Greeting from "./layer/Greeting";
+import Fab from "./shared/Fab";
 export default {
   mixins: [time, storage],
   components: {
-    "mc-greeting-wrapper": Greeting
+    "mc-greeting-wrapper": Greeting,
+    "mc-fab": Fab
   },
   data() {
     return {
@@ -67,23 +77,8 @@ export default {
   align-items: center;
 }
 
-.time-select > div {
-  font-size: 28px;
-  margin: 10px;
-  padding: 7px;
-  opacity: 0;
-  transition: all 0.5s;
-  cursor: pointer;
-}
-
 .time:hover + .time-select > div,
 .time-select:hover > div {
   opacity: 0.7;
-}
-
-.time-select > div:hover {
-  opacity: 1;
-  background-color: rgba(224, 224, 224, 0.5);
-  border-radius: 50%;
 }
 </style>
