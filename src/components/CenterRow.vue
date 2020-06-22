@@ -1,10 +1,20 @@
 <template>
   <div class="center-row">
     <div class="time-wrapper">
-      <div class="time">{{ selectedFormat === 12 ? time12 : time24 }}</div>
-      <div class="time-select">
-        <div @click="saveFormat(12)">12</div>
-        <div @click="saveFormat(24)">24</div>
+      <div class="time">
+        {{ selectedFormat === 12 ? time12 : time24 }}
+        <div class="time-select">
+          <mc-fab @click="saveFormat(12)" fontSize="28px">
+            <template v-slot:content>
+              <div>12</div>
+            </template>
+          </mc-fab>
+          <mc-fab @click="saveFormat(24)" fontSize="28px">
+            <template v-slot:content>
+              <div>24</div>
+            </template>
+          </mc-fab>
+        </div>
       </div>
     </div>
     <mc-greeting-wrapper></mc-greeting-wrapper>
@@ -15,10 +25,12 @@
 import time from "../mixins/time";
 import storage from "../mixins/storage";
 import Greeting from "./layer/Greeting";
+import Fab from "./shared/Fab";
 export default {
   mixins: [time, storage],
   components: {
-    "mc-greeting-wrapper": Greeting
+    "mc-greeting-wrapper": Greeting,
+    "mc-fab": Fab
   },
   data() {
     return {
@@ -56,8 +68,6 @@ export default {
   font-size: 1500%;
   font-weight: 500;
   letter-spacing: -5px;
-  margin-right: 20px;
-  margin-left: 80px;
 }
 
 .time-wrapper {
@@ -67,23 +77,25 @@ export default {
   align-items: center;
 }
 
-.time-select > div {
-  font-size: 28px;
-  margin: 10px;
-  padding: 7px;
-  opacity: 0;
-  transition: all 0.5s;
-  cursor: pointer;
+.time {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  position: relative;
 }
 
-.time:hover + .time-select > div,
+.time-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -60px;
+}
+
+.time:hover .time-select > div,
 .time-select:hover > div {
   opacity: 0.7;
-}
-
-.time-select > div:hover {
-  opacity: 1;
-  background-color: rgba(224, 224, 224, 0.5);
-  border-radius: 50%;
 }
 </style>
