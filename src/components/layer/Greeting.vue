@@ -64,7 +64,7 @@ export default {
 .greeting-wrapper {
   display: flex;
   flex-direction: row;
-  font-size: 400%;
+  font-size: 500%;
   justify-content: center;
   position: relative;
 }

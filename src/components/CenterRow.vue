@@ -1,18 +1,20 @@
 <template>
   <div class="center-row">
     <div class="time-wrapper">
-      <div class="time">{{ selectedFormat === 12 ? time12 : time24 }}</div>
-      <div class="time-select">
-        <mc-fab @click="saveFormat(12)" fontSize="28px">
-          <template v-slot:content>
-            <span>12</span>
-          </template>
-        </mc-fab>
-        <mc-fab @click="saveFormat(24)" fontSize="28px">
-          <template v-slot:content>
-            <span>24</span>
-          </template>
-        </mc-fab>
+      <div class="time">
+        {{ selectedFormat === 12 ? time12 : time24 }}
+        <div class="time-select">
+          <mc-fab @click="saveFormat(12)" fontSize="28px">
+            <template v-slot:content>
+              <div>12</div>
+            </template>
+          </mc-fab>
+          <mc-fab @click="saveFormat(24)" fontSize="28px">
+            <template v-slot:content>
+              <div>24</div>
+            </template>
+          </mc-fab>
+        </div>
       </div>
     </div>
     <mc-greeting-wrapper></mc-greeting-wrapper>
@@ -66,8 +68,6 @@ export default {
   font-size: 1500%;
   font-weight: 500;
   letter-spacing: -5px;
-  margin-right: 20px;
-  margin-left: 80px;
 }
 
 .time-wrapper {
@@ -77,7 +77,25 @@ export default {
   align-items: center;
 }
 
-.time:hover + .time-select > div,
+.time {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+}
+
+.time-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -70px;
+}
+
+.time:hover .time-select > div,
 .time-select:hover > div {
   opacity: 0.7;
 }

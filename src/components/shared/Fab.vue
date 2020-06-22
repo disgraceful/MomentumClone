@@ -21,15 +21,18 @@ export default {
 
 <style scoped>
 .fab-btn {
-  margin: 10px;
-  padding: 7px;
+  display: flex;
+  padding: 10px;
   opacity: 0;
   transition: opacity 0.5s;
   cursor: pointer;
 }
 
 .fab-btn > * {
+  min-width: var(--font-size);
   font-size: var(--font-size);
+  text-align: left;
+  letter-spacing: normal;
 }
 
 .fab-btn:hover {
