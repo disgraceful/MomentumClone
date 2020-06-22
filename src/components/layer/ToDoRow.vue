@@ -8,10 +8,13 @@
         </div>
       </template>
     </mc-checkbox>
-
-    <div class="hover-btn" @click="activateDialog($event)">
-      <i class="fa fa-ellipsis-h fa-lg"></i>
-    </div>
+    <mc-fab small @click.native="activateDialog()">
+      <template v-slot:content>
+        <div>
+          <i class="fa fa-ellipsis-h fa-lg"></i>
+        </div>
+      </template>
+    </mc-fab>
     <div class="dialog" v-show="dialogVisible">
       <ul>
         <li @click="activateEditing()">Edit</li>
@@ -27,6 +30,7 @@ import CheckboxVue from "../shared/Checkbox.vue";
 import domutils from "../../mixins/domutils";
 import { EventBus } from "../../eventbus";
 import Input from "../shared/Input";
+import Fab from "../shared/Fab";
 export default {
   props: {
     todo: Object,
@@ -36,7 +40,8 @@ export default {
   mixins: [domutils],
   components: {
     "mc-checkbox": CheckboxVue,
-    "mc-input": Input
+    "mc-input": Input,
+    "mc-fab": Fab
   },
   data() {
     return {
@@ -96,7 +101,7 @@ export default {
   align-items: center;
   position: relative;
   font-size: 16px;
-  padding: 2px 20px;
+  padding: 4px 20px;
 }
 
 .hidden-edit {
@@ -106,24 +111,13 @@ export default {
 .todo-text {
   font-size: 16px;
 }
-.hover-btn {
-  opacity: 0;
-  padding: 6px;
-  border-radius: 50%;
-  cursor: pointer;
-}
 
-.todo-list > li:hover .hover-btn {
+.li-container:hover > div:nth-child(2) {
   opacity: 0.6;
 }
 
-.todo-list > li:hover .hover-btn:hover,
-.todo-list > li.active .hover-btn {
+.todo-list > li.active .li-container > div {
   opacity: 1;
-}
-
-.todo-list > li:hover .hover-btn:hover {
-  background-color: rgba(224, 224, 224, 0.3);
 }
 
 .dialog {
