@@ -46,6 +46,9 @@ export default {
       this.$nextTick(() => {
         this.$refs.search.focus();
       });
+    },
+    test() {
+      console.log();
     }
   },
 
@@ -81,6 +84,7 @@ export default {
   font-size: inherit;
   opacity: var(--half-transparent);
   transition: all 0.5s;
+  cursor: pointer;
 }
 
 .input-container .inputbar {

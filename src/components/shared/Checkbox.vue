@@ -12,7 +12,8 @@
 <script>
 export default {
   props: {
-    value: Boolean
+    value: Boolean,
+    large: Boolean
   },
   data() {
     return {
@@ -34,7 +35,12 @@ export default {
     },
     cssProps() {
       return {
-        "--text-decorate": this.value ? "line-through" : "none"
+        "--text-decorate": this.value ? "line-through" : "none",
+        "--size": this.large ? "28px" : "18px",
+        "--padding": this.large ? "35px" : "25px",
+        "--check-w": this.large ? "9px" : "5px",
+        "--check-h": this.large ? "20px" : "12px",
+        "--check-left": this.large ? "8px" : "5px"
       };
     }
   }
@@ -50,7 +56,7 @@ export default {
 .inputs {
   display: flex;
   position: relative;
-  padding-left: 25px;
+  padding-left: var(--padding);
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -68,10 +74,10 @@ export default {
 
 .checkmark {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
-  height: 18px;
-  width: 18px;
+  height: var(--size);
+  width: var(--size);
   background-color: transparent;
   border: 2px #fff solid;
   border-radius: 15%;
@@ -81,10 +87,10 @@ export default {
   content: "";
   position: absolute;
   display: none;
-  left: 5px;
+  left: var(--check-left);
   top: -2px;
-  width: 5px;
-  height: 12px;
+  width: var(--check-w);
+  height: var(--check-h);
   border: solid white;
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);
