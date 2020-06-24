@@ -6,7 +6,7 @@
       <div class="gap"></div>
       <mc-center></mc-center>
       <mc-lower></mc-lower>
-      <mc-footer></mc-footer>
+      <mc-footer ref="footer"></mc-footer>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
   methods: {
     loadBg() {
       this.$refs.main.classList.remove("loading");
+      this.$refs.footer.retrieveImgInfo();
     }
   }
 };

@@ -40,7 +40,6 @@ export default {
   border-radius: 50%;
   cursor: pointer;
   transition: opacity 0.5s;
-  /* background-color: rgba(224, 224, 224, 0.5); */
 }
 
 .fab-btn > * {

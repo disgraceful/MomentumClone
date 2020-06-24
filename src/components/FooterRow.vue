@@ -1,6 +1,9 @@
 <template>
   <div class="footer-row">
-    <div class="img-info">Beautiful nature picture</div>
+    <div class="img-info" v-if="imgInfo">
+      <p>Beautiful {{ imgInfo.query }}</p>
+      <p>by {{ imgInfo.author }}</p>
+    </div>
     <div class="quote">
       <div v-if="!loading" class="quote-text">{{ quote.text }}</div>
       <div v-if="!loading" class="quote-author">{{ quote.author }}</div>
@@ -18,14 +21,21 @@ import storage from "../mixins/storage";
 import ToDoDialog from "./layer/ToDoDialog";
 
 export default {
+  props: { load: Boolean },
   mixins: [apiservice, storage],
   components: { "mc-todo-body": ToDoDialog },
   data() {
     return {
       loading: true,
       quote: null,
-      todoVisible: null
+      todoVisible: null,
+      imgInfo: null
     };
+  },
+  watch: {
+    load() {
+      this.imgInfo = this.retrieve("img", true);
+    }
   },
   computed: {
     isQuote() {
@@ -76,6 +86,10 @@ export default {
         author: quote.author,
         date: new Date().getTime()
       });
+    },
+
+    retrieveImgInfo() {
+      this.imgInfo = this.retrieve("img", true);
     }
   },
   async mounted() {
@@ -91,13 +105,14 @@ export default {
   display: flex;
   flex: 0 1 auto;
   padding: 10px 15px;
+  font-size: 22px;
 }
 .quote {
   flex-direction: column;
   flex: 1 1 auto;
   justify-content: center;
   text-align: center;
-  font-size: 22px;
+  font-size: inherit;
   position: relative;
   transition: all 0.5s ease;
 }
@@ -125,16 +140,25 @@ export default {
 
 .footer-row > div {
   display: flex;
+  flex-direction: column;
 }
 
 .img-info,
 .todo {
   flex: 0 0 200px;
-  align-self: flex-end;
+  justify-content: flex-end;
+}
+
+.img-info > p {
+  font-size: 22px;
+}
+
+.img-info {
+  align-items: flex-start;
 }
 
 .todo {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .todo > span {

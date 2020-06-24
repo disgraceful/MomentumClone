@@ -128,8 +128,4 @@ export default {
 .input-container.active .icon {
   opacity: 1;
 }
-
-.input-container:not(.active):hover .underline {
-  opacity: 0.5;
-}
 </style>
