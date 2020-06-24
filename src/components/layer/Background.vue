@@ -1,6 +1,6 @@
 <template>
   <div id="bg" :style="cssProps">
-    <img v-if="image" style="opacity:0" :src="this.image.url" @load="$emit('loaded')" />
+    <img v-if="imageUrl" style="opacity:0" :src="this.imageUrl" @load="$emit('loaded')" />
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   mixins: [storage, apiservice, daypart],
   data() {
     return {
-      image: null,
+      imageUrl: "",
       imgQueries: [
         "nature",
         "forest",
@@ -40,7 +40,7 @@ export default {
     cssProps() {
       return {
         "--bg-url": `url(${
-          this.image ? this.image.url : "../../img/test-bg.jpg"
+          this.imageUrl ? this.imageUrl : "../../img/test-bg.jpg"
         })`
       };
     }
@@ -51,7 +51,7 @@ export default {
       return queryArray[Math.floor(Math.random() * queryArray.length)];
     },
 
-    getImageOrientation(image) {
+    isImageLanscape(image) {
       return image.width > image.height;
     },
 
@@ -79,14 +79,11 @@ export default {
       const allImages = response.body.photos;
 
       const landscapeImages = allImages.filter(image =>
-        this.getImageOrientation(image)
+        this.isImageLanscape(image)
       );
       const selectedImage =
         landscapeImages[Math.floor(Math.random() * landscapeImages.length)];
-      this.image = {
-        author: selectedImage.photographer,
-        url: selectedImage.src.original
-      };
+      this.imageUrl = selectedImage.src.original;
 
       this.save("img", { query, author: selectedImage.photographer });
     }

@@ -52,7 +52,7 @@ export default {
     },
     getGreeting() {
       const daypart = this.getDayPart();
-      this.greeting = `Good ${daypart},`;
+      this.greeting = `Good ${daypart}, `;
     }
   },
   created() {

@@ -146,15 +146,19 @@ export default {
 .img-info,
 .todo {
   flex: 0 0 200px;
+  justify-content: flex-end;
 }
 
 .img-info > p {
   font-size: 22px;
 }
 
+.img-info {
+  align-items: flex-start;
+}
+
 .todo {
   align-items: flex-end;
-  justify-content: flex-end;
 }
 
 .todo > span {
