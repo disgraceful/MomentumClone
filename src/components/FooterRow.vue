@@ -1,8 +1,8 @@
 <template>
   <div class="footer-row">
-    <div class="img-info">
-      <p>Beautiful {{imgInfo.query}}</p>
-      <p>by {{imgInfo.author}}</p>
+    <div class="img-info" v-if="imgInfo">
+      <p>Beautiful {{ imgInfo.query }}</p>
+      <p>by {{ imgInfo.author }}</p>
     </div>
     <div class="quote">
       <div v-if="!loading" class="quote-text">{{ quote.text }}</div>
@@ -21,6 +21,7 @@ import storage from "../mixins/storage";
 import ToDoDialog from "./layer/ToDoDialog";
 
 export default {
+  props: { load: Boolean },
   mixins: [apiservice, storage],
   components: { "mc-todo-body": ToDoDialog },
   data() {
@@ -28,8 +29,13 @@ export default {
       loading: true,
       quote: null,
       todoVisible: null,
-      imgInfo: {}
+      imgInfo: null
     };
+  },
+  watch: {
+    load() {
+      this.imgInfo = this.retrieve("img", true);
+    }
   },
   computed: {
     isQuote() {
@@ -80,13 +86,15 @@ export default {
         author: quote.author,
         date: new Date().getTime()
       });
+    },
+
+    retrieveImgInfo() {
+      this.imgInfo = this.retrieve("img", true);
     }
   },
   async mounted() {
     this.loading = true;
     await this.getDailyQuote();
-    this.imgInfo = this.retrieve("img", true);
-    console.log(this.imgInfo);
     this.loading = false;
   }
 };
@@ -97,13 +105,14 @@ export default {
   display: flex;
   flex: 0 1 auto;
   padding: 10px 15px;
+  font-size: 22px;
 }
 .quote {
   flex-direction: column;
   flex: 1 1 auto;
   justify-content: center;
   text-align: center;
-  font-size: 22px;
+  font-size: inherit;
   position: relative;
   transition: all 0.5s ease;
 }

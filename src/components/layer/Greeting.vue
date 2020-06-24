@@ -1,6 +1,6 @@
 <template>
   <div class="greeting-wrapper">
-    <div ref="greeting" class="greeting" v-show="nameKnown">
+    <div ref="greeting" class="greeting" v-if="nameKnown">
       {{ greeting }}
       <span>{{ name }}</span>
       <div class="remove-container">
@@ -10,14 +10,14 @@
           </template>
         </mc-fab>
       </div>
-    </div>
-    <div class="name" v-show="!nameKnown">
-      <mc-input
-        text-align="center"
-        placeholder="What's your name?"
-        v-model="name"
-        @enter="enterName()"
-      ></mc-input>
+      <div class="name" v-if="!nameKnown">
+        <mc-input
+          text-align="center"
+          placeholder="What's your name?"
+          v-model="name"
+          @enter="enterName()"
+        ></mc-input>
+      </div>
     </div>
   </div>
 </template>
@@ -46,8 +46,8 @@ export default {
       }
     },
     clearName() {
-      this.name = null;
       this.nameKnown = false;
+      this.name = null;
       this.delete("name");
     },
     getGreeting() {
