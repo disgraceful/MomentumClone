@@ -10,8 +10,6 @@ Main goals were:
 - Different background image depending on part of the day
 - Focus and to-do list
 
-Technologies and tools: Vue 2.6, Webpack
-
 ## Technologies and tools
 
 Vue 2.6
