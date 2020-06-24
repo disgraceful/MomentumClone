@@ -1,6 +1,9 @@
 <template>
   <div class="footer-row">
-    <div class="img-info">Beautiful nature picture</div>
+    <div class="img-info">
+      <p>Beautiful {{imgInfo.query}}</p>
+      <p>by {{imgInfo.author}}</p>
+    </div>
     <div class="quote">
       <div v-if="!loading" class="quote-text">{{ quote.text }}</div>
       <div v-if="!loading" class="quote-author">{{ quote.author }}</div>
@@ -24,7 +27,8 @@ export default {
     return {
       loading: true,
       quote: null,
-      todoVisible: null
+      todoVisible: null,
+      imgInfo: {}
     };
   },
   computed: {
@@ -81,6 +85,8 @@ export default {
   async mounted() {
     this.loading = true;
     await this.getDailyQuote();
+    this.imgInfo = this.retrieve("img", true);
+    console.log(this.imgInfo);
     this.loading = false;
   }
 };
@@ -125,15 +131,20 @@ export default {
 
 .footer-row > div {
   display: flex;
+  flex-direction: column;
 }
 
 .img-info,
 .todo {
   flex: 0 0 200px;
-  align-self: flex-end;
+}
+
+.img-info > p {
+  font-size: 22px;
 }
 
 .todo {
+  align-items: flex-end;
   justify-content: flex-end;
 }
 

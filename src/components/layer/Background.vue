@@ -67,8 +67,9 @@ export default {
     },
 
     async retrieveImage() {
+      const query = this.getRandomImgQuery();
       const response = await this.get(
-        `https://api.pexels.com/v1/search?query=${this.getRandomImgQuery()}&per_page=10`,
+        `https://api.pexels.com/v1/search?query=${query}&per_page=10`,
         {
           headers: {
             Authorization: process.env.VUE_APP_IMG_KEY
@@ -86,6 +87,8 @@ export default {
         author: selectedImage.photographer,
         url: selectedImage.src.original
       };
+
+      this.save("img", { query, author: selectedImage.photographer });
     }
   },
   async created() {
